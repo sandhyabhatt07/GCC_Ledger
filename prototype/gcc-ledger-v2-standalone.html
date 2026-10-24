@@ -1,0 +1,1428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GCC Ledger v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: registry-style workspace. Sticky tab bar, one working view at a time, every figure carries a source chip. */
+:root{
+  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#131821; --muted:#5B6474; --line:#DCE1E9; --line-soft:#ECEFF4;
+  --accent:#1F4BD1; --accent-ink:#FFFFFF; --accent-soft:#E7EDFD;
+  --mark:#C96F00; --mark-soft:#FCF0DF;
+  --good:#17804F; --good-soft:#E3F3EA; --warn:#9A6A00; --warn-soft:#FBF1D6; --bad:#B3402F; --bad-soft:#FBE7E3;
+  --shadow:0 1px 2px rgba(20,30,60,.06),0 6px 24px rgba(20,30,60,.06);
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1117; --surface:#161B23; --ink:#E7EAF0; --muted:#9AA3B2; --line:#2A313C; --line-soft:#1F252E;
+  --accent:#86A2FF; --accent-ink:#0E1117; --accent-soft:#1C2742;
+  --mark:#F0A84A; --mark-soft:#33270F;
+  --good:#5CCB92; --good-soft:#12291D; --warn:#E2B54E; --warn-soft:#2E2610; --bad:#F08A78; --bad-soft:#331A15;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1117; --surface:#161B23; --ink:#E7EAF0; --muted:#9AA3B2; --line:#2A313C; --line-soft:#1F252E;
+  --accent:#86A2FF; --accent-ink:#0E1117; --accent-soft:#1C2742;
+  --mark:#F0A84A; --mark-soft:#33270F;
+  --good:#5CCB92; --good-soft:#12291D; --warn:#E2B54E; --warn-soft:#2E2610; --bad:#F08A78; --bad-soft:#331A15;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.6rem,3.4vw,2.35rem);line-height:1.15}
+h2{font-size:1.35rem;line-height:1.25}
+h3{font-size:1.05rem;line-height:1.3}
+p{margin:0}
+a{color:var(--accent)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:30px;height:30px;border-radius:7px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);font-family:var(--f-mono);font-weight:500;font-size:.8rem;flex:none}
+.brand b{font-family:var(--f-display);font-size:1.12rem;display:block;line-height:1.1}
+.brand small{color:var(--muted);font-size:.78rem}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;margin-left:auto;max-width:100%;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;padding:8px 12px;border-radius:7px;cursor:pointer;color:var(--muted);font-weight:500;white-space:nowrap}
+.tab:hover{color:var(--ink);background:var(--line-soft)}
+.tab[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+main{padding-block:28px 64px}
+.view{display:flex;flex-direction:column;gap:22px}
+
+/* generic */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.lede{max-width:68ch;color:var(--muted);font-size:1.02rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.grid2>*{min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07);color:var(--accent-ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.82rem;background:var(--surface);cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px}
+.chiprow .chip{font-size:.8rem}
+.cmpbtns{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:inline-block;font-size:.76rem;padding:1px 7px;border-radius:5px;background:var(--line-soft);color:var(--muted);white-space:nowrap}
+.src{display:inline-flex;align-items:center;gap:3px;font-family:var(--f-mono);font-size:.7rem;border:1px solid var(--line);border-radius:4px;padding:0 5px;background:var(--bg);color:var(--muted);cursor:pointer;vertical-align:1px;white-space:nowrap}
+.src:hover{border-color:var(--accent);color:var(--accent)}
+.conf{display:inline-block;width:7px;height:7px;border-radius:50%}
+.conf.H{background:var(--good)}.conf.M{background:var(--warn)}.conf.L{background:var(--bad)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.84rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+label.field{display:flex;flex-direction:column;gap:5px;font-size:.84rem;color:var(--muted);font-weight:500}
+input[type=text],input[type=number],input[type=search],select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+
+/* tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg);white-space:nowrap;position:sticky;top:0}
+th.sortable{cursor:pointer}
+th.sortable:hover{color:var(--accent)}
+tr:last-child td{border-bottom:0}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover td{background:var(--line-soft)}
+.linkish{background:none;border:0;padding:0;color:var(--ink);font-weight:600;cursor:pointer;text-align:left}
+.linkish:hover{color:var(--accent);text-decoration:underline}
+.bar{height:6px;border-radius:3px;background:var(--line-soft);overflow:hidden;min-width:60px;margin-top:5px}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:3px}
+
+/* overview */
+.hero{display:flex;flex-direction:column;gap:12px;padding-block:6px 4px}
+.claims{display:flex;flex-direction:column;gap:14px}
+.claim{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;align-items:baseline}
+.claim .val{font-family:var(--f-mono);font-size:1.05rem;font-weight:500}
+.claim .what{font-size:.86rem;color:var(--muted);grid-column:1/-1}
+.claim .track{grid-column:1/-1;height:10px;background:var(--line-soft);border-radius:5px;position:relative}
+.claim .track i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--accent)}
+.claim .track i.units{background:var(--mark)}
+.callout{border-left:3px solid var(--mark);background:var(--mark-soft);padding:12px 14px;border-radius:0 8px 8px 0;font-size:.92rem}
+.stats{display:flex;gap:28px;flex-wrap:wrap}
+.stats div{display:flex;flex-direction:column}
+.stats b{font-family:var(--f-mono);font-size:1.5rem;font-weight:500}
+.stats span{font-size:.8rem;color:var(--muted)}
+.starts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.start{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.start:hover{border-color:var(--accent)}
+.start b{font-family:var(--f-display);font-size:1.05rem}
+.start span{color:var(--muted);font-size:.88rem}
+.minibars{display:flex;flex-direction:column;gap:8px}
+.mb{display:grid;grid-template-columns:96px minmax(0,1fr) 120px;gap:10px;align-items:center;font-size:.86rem}
+.mb .t{height:9px;background:var(--line-soft);border-radius:4px;position:relative;overflow:hidden}
+.mb .t i{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:4px}
+.mb .t i.u{background:var(--mark);opacity:.85}
+
+/* planner */
+.planner{display:grid;grid-template-columns:330px minmax(0,1fr);gap:22px;align-items:start}
+.planner>*{min-width:0}
+.form{display:flex;flex-direction:column;gap:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
+.form fieldset{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.form legend{font-family:var(--f-display);font-weight:700;font-size:.98rem;margin-bottom:6px;padding:0}
+.slider{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:2px 10px;align-items:center;font-size:.86rem}
+.slider output{font-family:var(--f-mono);text-align:right;color:var(--muted)}
+.slider input{grid-column:1/-1}
+.results{display:flex;flex-direction:column;gap:12px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:4px 14px}
+.rcard.top1{border-color:var(--accent);box-shadow:var(--shadow)}
+.rcard.inpack{border-color:var(--accent);border-width:2px}
+.rcard .packbtn{grid-column:1/-1;justify-self:start;margin-top:4px}
+.cmpbar{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.rank{font-family:var(--f-mono);font-size:1.2rem;color:var(--muted);grid-row:1/3}
+.rcard.top1 .rank{color:var(--accent)}
+.rname{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.score{font-family:var(--f-mono);font-size:1.25rem;text-align:right}
+.score small{display:block;font-size:.7rem;color:var(--muted);font-family:var(--f-body)}
+.rbody{grid-column:2/-1;display:flex;flex-direction:column;gap:10px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kv div{display:flex;flex-direction:column;font-size:.8rem;color:var(--muted)}
+.kv b{font-family:var(--f-mono);font-weight:500;font-size:.98rem;color:var(--ink)}
+.comps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.comps div{font-size:.72rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.74rem;padding:1px 8px;border-radius:999px;font-weight:600}
+.pill.good{background:var(--good-soft);color:var(--good)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.why{font-size:.88rem;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+details.assume{font-size:.86rem;color:var(--muted)}
+details.assume summary{cursor:pointer;font-weight:500}
+details.assume ul{margin:8px 0 0;padding-left:18px}
+
+/* compare */
+.cmp td:first-child{color:var(--muted);font-size:.84rem;white-space:nowrap}
+.cmp td{min-width:180px}
+.cmp td:first-child{min-width:140px}
+.best{color:var(--good);font-weight:600}
+
+/* providers */
+.evid{font-size:.76rem;font-weight:600;white-space:nowrap}
+.evid.press{color:var(--warn)}.evid.self{color:var(--muted)}.evid.gov{color:var(--accent)}
+
+/* ask */
+.ask{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:22px;align-items:start}
+.ask>*{min-width:0}
+.chat{display:flex;flex-direction:column;gap:14px;min-height:300px}
+.msg{max-width:100%;padding:12px 16px;border-radius:10px;font-size:.94rem}
+.msg.user{align-self:flex-end;background:var(--accent-soft);max-width:85%}
+.msg.bot{background:var(--surface);border:1px solid var(--line)}
+.msg.bot p+p,.msg.bot p+ul,.msg.bot ul+p,.msg.bot h4+p,.msg.bot p+h4,.msg.bot ul+h4{margin-top:8px}
+.msg.bot ul,.msg.bot ol{margin:6px 0;padding-left:20px}
+.msg.bot h4{margin:0;font-family:var(--f-display);font-size:.98rem}
+.msg .cite{display:inline-flex;font-family:var(--f-mono);font-size:.7rem;padding:0 5px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:0;cursor:pointer;vertical-align:1px;margin:0 1px}
+.msg .cite:hover{text-decoration:underline}
+.thinking{color:var(--muted);font-style:italic}
+.composer{display:flex;gap:8px;position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:var(--shadow)}
+.composer input{border:0;background:transparent}
+.composer input:focus-visible{outline:0}
+.suggest{display:flex;flex-direction:column;gap:8px}
+.suggest button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px;cursor:pointer;font-size:.88rem}
+.suggest button:hover{border-color:var(--accent)}
+.note{font-size:.84rem;color:var(--muted)}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(10,14,22,.35);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:41;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 20px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 20px) 20px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+.drawer dl{display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px 12px;margin:0;font-size:.9rem}
+.drawer dt{color:var(--muted)}
+.drawer dd{margin:0;min-width:0}
+.x{margin-left:auto;background:none;border:1px solid var(--line);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:1.1rem}
+
+footer{border-top:1px solid var(--line);padding-block:18px;color:var(--muted);font-size:.82rem}
+
+@media (max-width:860px){
+  .planner,.ask{grid-template-columns:minmax(0,1fr)}
+  .form{position:static}
+  .comps{grid-template-columns:repeat(3,minmax(0,1fr))}
+  nav.tabs{margin-left:0;width:100%}
+}
+@media (max-width:480px){
+  .mb{grid-template-columns:80px minmax(0,1fr);}
+  .mb .v{grid-column:2}
+  .rcard{grid-template-columns:26px minmax(0,1fr)}
+  .score{grid-column:2;text-align:left}
+}
+@media (prefers-reduced-motion:no-preference){.bar>i,.mb .t i{transition:width .35s ease}}
+</style>
+<style>
+/* v2 additions */
+.tier{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;padding:1px 7px;border-radius:999px;white-space:nowrap}
+.tier.Verified{background:var(--good-soft);color:var(--good)}
+.tier.Reported{background:var(--accent-soft);color:var(--accent)}
+.tier.Claimed{background:var(--warn-soft);color:var(--warn)}
+.tier.Estimate{background:var(--line-soft);color:var(--muted)}
+.tier.Pending{background:var(--bad-soft);color:var(--bad)}
+.src.pending{border-style:dashed;color:var(--bad)}
+.position{font-size:.84rem;color:var(--muted);max-width:60ch}
+.neutral{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.neutral div{border-top:2px solid var(--line);padding-top:10px;font-size:.9rem}
+.neutral b{display:block;font-family:var(--f-display);font-size:1rem;margin-bottom:2px}
+.conflict{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.conflict .side{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.conflict .big{font-family:var(--f-mono);font-size:1.4rem}
+/* decision room */
+.room{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
+.room>*{min-width:0}
+.pack{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:28px clamp(18px,4vw,40px);display:flex;flex-direction:column;gap:22px}
+.pack header{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--line);padding-bottom:16px}
+.pack h2{font-size:1.5rem}
+.pack section{display:flex;flex-direction:column;gap:8px}
+.pack h3{display:flex;gap:10px;align-items:baseline}
+.pack h3 .sn{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.pack p,.pack li{font-size:.94rem}
+.pack ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.fig{white-space:normal}
+.fig.stale{background:var(--warn-soft);border-radius:4px;padding:0 4px;box-shadow:inset 0 -2px 0 var(--warn)}
+.stalebox{border-left:3px solid var(--warn);background:var(--warn-soft);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.88rem;display:flex;flex-direction:column;gap:6px}
+.stalebox.ok{border-left-color:var(--good);background:var(--good-soft)}
+.stalebox ul{margin:0;padding-left:18px}
+.side-panel{display:flex;flex-direction:column;gap:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
+.comments{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line);padding-top:8px}
+.comment{font-size:.86rem;background:var(--bg);border-radius:6px;padding:6px 10px}
+.comment b{font-weight:600}
+.addc{display:flex;gap:6px;flex-wrap:wrap}
+.addc select{width:auto}
+.addc input{flex:1;min-width:140px}
+.btn.sm{padding:4px 10px;font-size:.84rem}
+.guest{display:flex;align-items:center;gap:8px;font-size:.88rem}
+.av{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:.72rem;font-weight:600;flex:none}
+/* receipts */
+.receipts{display:flex;flex-direction:column;gap:12px}
+.receipt{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px}
+.receipt .what{grid-column:1/-1;font-size:.94rem}
+.receipt .meta{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);align-items:center}
+.steps3{display:flex;gap:4px;align-items:center;font-size:.72rem}
+.steps3 span{padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.steps3 span.on{border-color:transparent}
+.steps3 span.on.c{background:var(--warn-soft);color:var(--warn)}
+.steps3 span.on.r{background:var(--accent-soft);color:var(--accent)}
+.steps3 span.on.v{background:var(--good-soft);color:var(--good)}
+.formcard{border:1px solid var(--accent);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--surface);grid-column:1/-1}
+.formcard .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.toast{font-size:.86rem;color:var(--good);font-weight:600}
+/* signals */
+.ladder-head,.sig{display:grid;grid-template-columns:minmax(170px,1.3fr) repeat(6,minmax(92px,1fr));gap:6px;align-items:stretch}
+.ladder-head div{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:0 4px}
+.sig{border-top:1px solid var(--line-soft);padding-block:10px}
+.sig .who{display:flex;flex-direction:column;gap:3px;font-size:.88rem}
+.step{border-radius:6px;padding:6px 8px;font-size:.74rem;line-height:1.3;display:flex;flex-direction:column;gap:2px}
+.step.done{background:var(--accent-soft);color:var(--ink)}
+.step.done b{color:var(--accent)}
+.step.unk{border:1px dashed var(--line);color:var(--muted)}
+.step.no{color:var(--muted);opacity:.6}
+button.step{font:inherit;text-align:left;cursor:pointer;background:none}
+button.step:hover{border-color:var(--accent);opacity:1}
+.step.wif{border:1px dashed var(--accent);background:var(--accent-soft);color:var(--accent);opacity:1}
+.howto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:4px 0 18px}
+.howto div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.86rem;line-height:1.45}
+.howto b{display:block;margin-bottom:4px}
+.howto .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:.75rem;font-weight:700;margin-right:6px}
+@media (max-width:760px){.howto{grid-template-columns:1fr}}
+.sigbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:4px 0 10px;font-size:.88rem}
+.sample-tag{font-size:.7rem;font-weight:700;color:var(--mark);letter-spacing:.06em;text-transform:uppercase}
+.ladderwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 14px}
+.ladderwrap>div{min-width:860px}
+.models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.models label{border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:.8rem;cursor:pointer;display:flex;flex-direction:column;gap:2px;color:var(--ink)}
+.models input{position:absolute;opacity:0;pointer-events:none}
+.models label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.models label:focus-within{outline:2px solid var(--accent)}
+@media (max-width:860px){.room{grid-template-columns:minmax(0,1fr)}.side-panel{position:static}}
+</style>
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand"><span class="logo">GL</span><div><b>GCC Ledger</b><small>The buyer's side of India's GCC market</small></div></div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" data-tab="overview" id="t-overview">Overview</button>
+      <button class="tab" role="tab" data-tab="planner" id="t-planner">Entry planner</button>
+      <button class="tab" role="tab" data-tab="room" id="t-room">Decision Room</button>
+      <button class="tab" role="tab" data-tab="providers" id="t-providers">Providers &amp; receipts</button>
+      <button class="tab" role="tab" data-tab="signals" id="t-signals">New GCC signals</button>
+      <button class="tab" role="tab" data-tab="cities" id="t-cities">Cities &amp; policies</button>
+      <button class="tab" role="tab" data-tab="gccs" id="t-gccs">GCC directory</button>
+      <button class="tab" role="tab" data-tab="ask" id="t-ask">Ask</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- OVERVIEW -->
+  <section class="view" id="v-overview" role="tabpanel" aria-labelledby="t-overview">
+    <div class="hero">
+      <span class="eyebrow">Prototype v2 · data checked 22 Oct 2026</span>
+      <h1>Evidence for your India GCC decision, built for you and not sold to the vendors chasing you</h1>
+      <p class="lede">For the company entering India. Every figure links to the page it came from, with its date and evidence level. When sources disagree we show both. When a source changes after you have used it, we tell you.</p>
+      <div class="legend" aria-label="Evidence levels">
+        <span><span class="tier Verified">Verified</span> confirmed by a primary source or by both parties</span>
+        <span><span class="tier Reported">Reported</span> credible third-party report</span>
+        <span><span class="tier Claimed">Claimed</span> self-reported, not yet checked</span>
+        <span><span class="tier Estimate">Estimate</span> our model, method shown</span>
+        <span><span class="tier Pending">Source pending</span> no link yet</span>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-head"><h2>How many GCCs does India have?</h2><span class="muted" style="font-size:.84rem">It depends on what is counted, and when</span></div>
+        <div class="claims" id="claims"></div>
+        <div class="callout" style="margin-top:16px"><b>Ledger reading.</b> 1,700 is the FY24 count of companies. 2,117 is the FY26 count of companies (data as of March 2026). 3,728 counts their individual centres. The "2,000+" heard in speeches rarely says which.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Where they are</h2><span class="muted" style="font-size:.84rem">Companies with a centre in each city</span></div>
+        <div class="minibars" id="citycounts"></div>
+        <p class="note" style="margin-top:10px">Vestian, July 2025 <span id="vestchip"></span>. Zinnov counts 880+ centres in Bengaluru and 355+ in Hyderabad <span id="zinchip"></span>: those count centres, not companies.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Conflicts we found this month</h2><span class="muted" style="font-size:.84rem">Shown, not hidden</span></div>
+      <div class="conflict" id="conflicts"></div>
+    </div>
+
+    <div>
+      <h2 style="margin-bottom:12px">What only GCC Ledger does</h2>
+      <div class="starts">
+        <button class="start" data-go="room"><b>Decision Room</b><span>Turns your plan into a cited board pack. Flags any figure whose source has changed since you prepared it. Your lawyer, auditor and broker comment as invited guests.</span></button>
+        <button class="start" data-go="providers"><b>Delivery receipts</b><span>Facts about what a provider delivered, moving from Claimed to Reported to Verified when the client GCC confirms. No star ratings.</span></button>
+        <button class="start" data-go="signals"><b>New GCC signals</b><span>Tracks each incoming GCC up a ladder of public evidence, from entity filing to operational, so you see peers arriving before the press release.</span></button>
+        <button class="start" data-go="planner"><b>Entry planner</b><span>Ranks cities on the factors you weight and estimates annual cost. Cost spreads are small, so talent and ecosystem usually decide.</span></button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>How we stay neutral</h2></div>
+      <div class="neutral">
+        <div><b>Free for the company entering</b>The reference data, planner and a single-user board pack cost nothing.</div>
+        <div><b>No referral fees or paid introductions</b>We earn nothing from which city, provider or model you choose. Reference calls with confirmed past clients are free.</div>
+        <div><b>Who pays</b>Entrants pay for the Decision Room team tier. Brokers, recruiters and states buy aggregated trends, never personal contacts or city scores.</div>
+        <div><b>Verification is never for sale</b>Providers may pay a flat fee to host evidence. Paying firms are labelled, and a receipt's level depends only on who confirmed it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANNER -->
+  <section class="view" id="v-planner" role="tabpanel" aria-labelledby="t-planner" hidden>
+    <div class="hero">
+      <h1>Entry planner</h1>
+      <p class="lede">Tell us roughly what you are building. We rank cities on the factors you weight and estimate the annual cost. Then turn the result into a board pack in the Decision Room.</p>
+    </div>
+    <div class="howto" aria-label="How the planner works">
+      <div><b><span class="n">1</span>Describe your centre</b>Pick your industries, year-one headcount and how you will operate (employer of record, build-operate-transfer or your own entity). The industry sets a typical mix of engineering, data, operations and support roles, which you can adjust.</div>
+      <div><b><span class="n">2</span>Say what matters</b>Weight six factors from 0 to 5: talent depth, GCC ecosystem, low cost, state policy, flights and peers. Each city gets a 0–1 score on each factor from the dataset; the fit score is their weighted average, out of 100.</div>
+      <div><b><span class="n">3</span>Read the ranking and build the pack</b>Cost = salaries for your role mix × the city's salary index, plus leadership, office rent, running costs and model fees. Tick "Add to board pack" on the cities you want, then press Build board pack.</div>
+    </div>
+    <div class="planner">
+      <form class="panel form" id="pform" onsubmit="return false">
+        <fieldset>
+          <legend>Your centre</legend>
+          <div class="field" role="group" aria-labelledby="p-sector-l"><span id="p-sector-l">Industry: pick one, several or all</span><div class="chiprow" id="p-sectors"></div><span class="note" id="p-sectornote"></span></div>
+          <label class="field" for="p-hc">Headcount in year one<input id="p-hc" type="number" min="20" max="10000" step="10" value="300"></label>
+          <label class="field" style="flex-direction:row;align-items:center;gap:8px;color:var(--ink)" for="p-t2"><input id="p-t2" type="checkbox" checked> Include tier-2 cities</label>
+        </fieldset>
+        <fieldset><legend>Operating model</legend><div class="models" id="models"></div><p class="note" id="modelnote"></p></fieldset>
+        <fieldset id="mixset"><legend>Function mix</legend></fieldset>
+        <fieldset id="wset"><legend>What matters most</legend></fieldset>
+      </form>
+      <div class="results">
+        <div class="row" style="justify-content:space-between">
+          <p class="muted" id="psummary" style="font-size:.9rem"></p>
+          <div class="row"><button class="btn primary" id="topack" type="button">Build board pack</button><button class="btn" id="explain" type="button">Ask Claude to explain</button></div>
+        </div>
+        <div id="rlist" class="results"></div>
+        <details class="assume panel">
+          <summary>How the estimate and score work</summary>
+          <ul id="assumptions"></ul>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISION ROOM -->
+  <section class="view" id="v-room" role="tabpanel" aria-labelledby="t-room" hidden>
+    <div class="hero">
+      <h1>Decision Room</h1>
+      <p class="lede">Your board pack, built from the planner. Every figure keeps its link to its source. Set the date you prepared the pack and we flag every figure whose source has changed since.</p>
+    </div>
+    <div class="panel cmpbar" role="group" aria-labelledby="cmp-l"><h3 id="cmp-l">Cities in this pack</h3><div class="cmpbtns" id="cmpmode"></div><div class="chiprow" id="cmpcities"></div><span class="note">Choose Top 2, Top 3, Top 5 or All from the planner ranking, or tap any city to add or remove it.</span></div>
+    <div class="room">
+      <article class="pack" id="pack"></article>
+      <aside class="side-panel">
+        <div class="panel" style="display:flex;flex-direction:column;gap:10px">
+          <h3>Pack settings</h3>
+          <label class="field" for="packdate">Pack prepared on<input id="packdate" type="date"></label>
+          <p class="note">Try 15 Jan 2026 to see what has changed since. Set it to today and nothing is stale.</p>
+          <div class="row"><button class="btn sm" id="packtoday" type="button">Mark as prepared today</button><button class="btn sm" id="copypack" type="button">Copy as text</button></div>
+          <span class="toast" id="copytoast" aria-live="polite"></span>
+        </div>
+        <div class="panel" style="display:flex;flex-direction:column;gap:10px">
+          <h3>Invited advisors</h3>
+          <div id="guests" style="display:flex;flex-direction:column;gap:8px"></div>
+          <form class="addc" id="guestform">
+            <input id="g-name" type="text" placeholder="Name or firm" aria-label="Advisor name or firm" required>
+            <select id="g-role" aria-label="Advisor role"><option>Lawyer</option><option>Auditor</option><option>Real estate broker</option><option>Recruiter</option><option>CFO</option></select>
+            <button class="btn sm" type="submit">Invite</button>
+          </form>
+          <p class="note">Advisors join as your guests to check their sections. Demo: guests and comments are saved in this browser only.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PROVIDERS -->
+  <section class="view" id="v-providers" role="tabpanel" aria-labelledby="t-providers" hidden>
+    <div class="hero">
+      <h1>Providers &amp; delivery receipts</h1>
+      <p class="lede">A receipt is a fact about a delivery, not an opinion: who did what, for which GCC, where and when. It starts as Claimed, becomes Reported when a credible public source covers it, and Verified only when the client GCC confirms it.</p>
+      <div class="steps3" aria-label="Receipt levels"><span class="on c">Claimed</span>→<span class="on r">Reported</span>→<span class="on v">Verified</span></div>
+    </div>
+    <div class="grid2">
+      <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+        <div class="panel-head" style="margin:0"><h2>Receipts</h2><button class="btn sm" id="newclaim" type="button">Add a delivery claim (for providers)</button></div>
+        <div class="receipts" id="receipts"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+        <h2>Directory</h2>
+        <div class="filters" style="margin:0">
+          <label class="field" for="v-cat">What you need<select id="v-cat"></select></label>
+          <label class="field" for="v-city">City<select id="v-city"></select></label>
+        </div>
+        <div class="tablewrap"><table id="vtable"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNALS -->
+  <section class="view" id="v-signals" role="tabpanel" aria-labelledby="t-signals" hidden>
+    <div class="hero">
+      <h1>New GCC signals</h1>
+      <p class="lede">Each incoming GCC climbs a ladder of public evidence. Announcement trackers see a GCC only at the press release. Company filings and SEZ approval minutes are public earlier but scattered across PDFs. We join them, and every step carries its document and date.</p>
+    </div>
+    <div class="filters">
+      <label class="field" for="s-city">City<select id="s-city"></select></label>
+      <label class="field" for="s-sector">Industry<select id="s-sector"></select></label>
+      <label class="field" for="s-sort">Sort by<select id="s-sort"><option value="like">Most likely to open first</option><option value="least">Least evidence first</option><option value="name">Company name</option></select></label>
+      <label class="field" style="flex-direction:row;align-items:center;gap:8px;color:var(--ink)" for="s-real"><input id="s-real" type="checkbox"> Hide illustrative rows</label>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>How many are coming</h2><span class="tier Estimate">Directional, not a forecast</span></div>
+      <div id="trend" style="overflow-x:auto"></div>
+      <p class="note" id="trendnote"></p>
+    </div>
+    <div class="ladderwrap"><div>
+      <div class="ladder-head" id="ladderhead"></div>
+      <div class="sigbar"><span id="sigsum"></span><span class="note" style="margin:0">Tip: tap any "Not checked" or "Not yet" step to test a what-if, e.g. "what if they sign a lease?". The likelihood updates; tap again to undo.</span><button class="btn sm" id="sigreset" type="button" hidden>Clear what-ifs</button></div>
+      <div id="signals"></div>
+    </div></div>
+    <p class="note">Real entries use announcements and press reports, each linked. Steps marked "not checked" need a filings lookup that this prototype has not run. The two rows marked <span class="sample-tag">Illustrative</span> are invented to show what early detection looks like. They are not real companies.</p>
+    <div class="panel">
+      <div class="panel-head"><h2>How the likelihood score works</h2><span class="tier Estimate">Judgement-set weights, not trained</span></div>
+      <p style="max-width:70ch">Likelihood is our estimate of the chance a GCC becomes operational within 12 months. Each documented step on the ladder adds its weight to a starting score, and the logistic function turns the total into a percentage. A step that is not checked counts as zero, so filling in filings can only raise a score.</p>
+      <div class="tablewrap" style="margin-top:12px;max-width:560px"><table id="liketable"></table></div>
+      <p class="note" style="margin-top:10px">Once a few years of entities have known outcomes, these weights would be fitted by logistic regression on that history and checked for calibration, instead of being set by hand.</p>
+    </div>
+  </section>
+
+  <!-- CITIES -->
+  <section class="view" id="v-cities" role="tabpanel" aria-labelledby="t-cities" hidden>
+    <div class="hero">
+      <h1>Cities &amp; state policies</h1>
+      <p class="lede">Pick up to three cities to compare. Green marks the best value in each row.</p>
+    </div>
+    <div class="row" id="cpick" aria-label="Choose cities to compare"></div>
+    <div class="tablewrap"><table class="cmp" id="cmp"></table></div>
+    <div class="panel-head" style="margin:10px 0 0"><h2>State GCC policies</h2><span class="muted" style="font-size:.84rem" id="polhead"></span></div>
+    <div class="tablewrap"><table id="ptable"></table></div>
+    <p class="note">Incentive rates are taken from law-firm and advisory summaries of each policy, linked in each row. Check the notified text before relying on a rate.</p>
+  </section>
+
+  <!-- GCCS -->
+  <section class="view" id="v-gccs" role="tabpanel" aria-labelledby="t-gccs" hidden>
+    <div class="hero">
+      <h1>GCC directory</h1>
+      <p class="lede">A seed sample. Other products already track 1,600+ GCCs, so the directory is our free foundation, not our edge. Records without a linked source say so.</p>
+    </div>
+    <div class="filters">
+      <label class="field" for="g-q">Search<input id="g-q" type="search" placeholder="Company name"></label>
+      <label class="field" for="g-sector">Industry<select id="g-sector"></select></label>
+      <label class="field" for="g-city">City<select id="g-city"></select></label>
+      <label class="field" for="g-status">Status<select id="g-status"><option value="">Any</option><option>Operating</option><option>Ramping</option><option>Announced</option></select></label>
+      <label class="field" for="g-src">Source date<select id="g-src"><option value="">Any</option><option value="recent">2025 or later</option><option value="older">Before 2025</option><option value="undated">Undated (company page)</option></select></label>
+    </div>
+    <p class="muted" id="gcount" style="font-size:.88rem"></p>
+    <div class="tablewrap"><table id="gtable"></table></div>
+  </section>
+
+  <!-- ASK -->
+  <section class="view" id="v-ask" role="tabpanel" aria-labelledby="t-ask" hidden>
+    <div class="hero">
+      <h1>Ask the ledger</h1>
+      <p class="lede">Claude answers from this ledger only, cites each claim, and says when the ledger does not know.</p>
+    </div>
+    <div class="ask">
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+        <div class="chat" id="chat"></div>
+        <form class="composer" id="composer">
+          <input id="q" type="text" placeholder="e.g. Best city for a 200-person fintech GCC?" autocomplete="off" aria-label="Your question">
+          <button class="btn primary" id="send" type="submit">Ask</button>
+          <button class="btn" id="stop" type="button" hidden>Stop</button>
+        </form>
+        <p class="note" id="asknote">Answers use your own Claude usage. The first question asks your permission.</p>
+      </div>
+      <div class="suggest" id="suggest"><span class="eyebrow">Try</span></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">GCC Ledger prototype v2. Seed data from public reports, state policy summaries and company announcements, each linked where available. Planning estimates, not advice. Demo actions (confirmations, guests, comments) are saved only in your browser.</div></footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-modal="true" role="dialog" aria-labelledby="dtitle"></aside>
+<script>
+/* ============ SOURCES (deep links) ============ */
+const SOURCES = {
+  S1:{name:"India's GCC sector: >1,700 GCCs, 1.9M people, $64.6B in FY24",pub:"PIB / MeitY, citing nasscom",date:"2025-12-11",tier:"Reported",url:"https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/dec/doc20251211727701.pdf"},
+  S2:{name:"Zinnov–nasscom India GCC Landscape 2026: 2,117 GCCs, 3,728 units, 2.36M, $98.4B",pub:"Zinnov, nasscom",date:"2026-03 (data as of)",tier:"Reported",url:"https://zinnov.com/centers-of-excellence/zinnov-nasscom-india-gcc-landscape-2026-report/"},
+  S3:{name:"Vestian: ~1,700 GCCs; Bengaluru 487, Hyderabad 273, NCR 272, Mumbai 207, Pune 178, Chennai 162",pub:"Vestian via The Week (PTI)",date:"2025-07-21",tier:"Reported",url:"https://www.theweek.in/wire-updates/business/2025/07/21/dcm52-biz-realty-gcc.html"},
+  S4:{name:"Zinnov–KDEM study on mid-market GCCs in Karnataka",pub:"Zinnov press release",date:"2025-09-11",tier:"Reported",url:"https://zinnov.com/press-releases/mid-market-gccs-in-karnataka-are-emerging-as-strategic-innovation-engines-maturing-1-4x-faster-than-peers-zinnov-kdem-study/"},
+  S5:{name:"India office market Q1 CY26: market rents by city",pub:"CRE Matrix",date:"2026-Q1",tier:"Reported",url:"https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/"},
+  S6:{name:"Salary bands and talent pool sizes",pub:"GCC Ledger estimate from staffing reports",date:"2025",tier:"Estimate",url:""},
+  S7:{name:"CBRE, The Policy Advantage: states target ~1,380 new GCCs and 1.18M jobs by 2031",pub:"CBRE via Entrepreneur India",date:"2026-08-14",tier:"Reported",url:"https://india.entrepreneur.com/business-news/states-target-1-1-mn-gcc-jobs-by-2031-cbre"},
+  S8:{name:"Tier-2 rents, NCR city split and cost model",pub:"GCC Ledger estimate",date:"2026-10",tier:"Estimate",url:""},
+  S9:{name:"Maharashtra cabinet approves GCC policy: 400 centres, 4 lakh jobs",pub:"PTI via The Week",date:"2025-09-30",tier:"Reported",url:"https://www.theweek.in/wire-updates/national/2025/09/30/bes21-mh-cab-gcc-policy.html"},
+  PKA:{name:"Karnataka Global Capability Center Policy 2024–2029: key features",pub:"India Briefing (Dezan Shira)",date:"2024-11",tier:"Reported",url:"https://www.india-briefing.com/news/karnataka-global-capability-center-policy-2024-2029-key-features-35441.html"},
+  PMH:{name:"Maharashtra GCC Policy 2025: key highlights and incentives",pub:"RSM India",date:"2026-01-30",tier:"Reported",url:"https://www.rsm.global/india/node/867"},
+  PHR:{name:"Government of Haryana notifies the Haryana GCC Policy, 2026",pub:"PwC India tax alert",date:"2026-06-03",tier:"Reported",url:"https://www.pwc.in/research-insights/news_alert/tax-insights/government-of-haryana-notifies-the-haryana-global-capability-centres-policy-2026.html"},
+  PUP:{name:"Impetus to GCCs in India: UP releases its final GCC Policy",pub:"Khaitan & Co",date:"2025-06-11",tier:"Reported",url:"https://khaitanco.com/sites/default/files/2025-06/ERGO%20-%20Impetus%20to%20GCCs%20in%20India_UP%20releases%20its%20final%20GCC%20Policy%20-%2011%20June%202025.pdf"},
+  PGJ:{name:"Gujarat unveils its GCC Policy 2025–2030",pub:"Rödl & Partner",date:"2025-02-20",tier:"Reported",url:"https://www.roedl.com/insights/india-global-capability-centers-gujarat-unveils-gcc-policy"},
+  PGJ2:{name:"Gujarat issues Operational Guidelines 1.0 for GCC Policy 2025–30",pub:"DeshGujarat",date:"2026-10-03",tier:"Reported",url:"https://deshgujarat.com/2026/10/03/gujarat-govt-issues-operational-guidelines-1-0-for-implementation-of-gcc-policy-2025-30/"},
+  PGJ3:{name:"Gujarat GCC Policy 2025–30 launched at GIFT City: at least 250 new GCC units, 50,000+ jobs",pub:"DeshGujarat",date:"2025-02-11",tier:"Reported",url:"https://deshgujarat.com/2025/02/11/gujarat-global-capability-centre-policy-2025-30-launched-at-gift-city-gandhinagar/"},
+  PHR2:{name:"Haryana is driving GCC expansion with a policy framework (incentive rates)",pub:"JLL India",date:"2026-07-06",tier:"Reported",url:"https://www.jll.com/en-in/insights/haryana-is-driving-gcc-expansion-with-a-policy-framework"},
+  PRJ:{name:"Impetus to GCCs in India: Rajasthan releases its GCC Policy",pub:"Khaitan & Co",date:"2025-12-16",tier:"Reported",url:"https://www.khaitanco.com/sites/default/files/2025-12/Ergo%20-%20Impetus%20to%20GCCs%20in%20India%20-%20Rajasthan%20releases%20its%20GCC%20Policy%20-%2016%20December%202025.pdf"},
+  PMP:{name:"Madhya Pradesh GCC Policy 2025",pub:"Drishti IAS",date:"2025-02-17",tier:"Reported",url:"https://www.drishtiias.com/state-pcs-current-affairs/madhya-pradesh-gcc-policy-2025"},
+  PAP:{name:"Andhra Pradesh releases its IT and GCC Policy 4.0 (2024–29)",pub:"Khaitan & Co",date:"2025-01-14",tier:"Reported",url:"https://khaitanco.com/thought-leadership/Impetus-to-GCCs-in-India-Andhra-Pradesh-Releases-its-IT-and-GCC-Policy"},
+  PTG:{name:"New Telangana GCC policy to focus on AI, space, semiconductors",pub:"Siasat, citing The Times of India",date:"2026-09-17",tier:"Reported",url:"https://www.siasat.com/new-telangana-gcc-policy-to-focus-on-ai-space-semiconductors-3543873/"},
+  S10:{name:"5 shifts defining India's GCC story in 2025: Bengaluru 880+ centers, Hyderabad 355+, India 1,760+ centers",pub:"Zinnov blog",date:"2026-01-08",tier:"Reported",url:"https://zinnov.com/centers-of-excellence/5-shifts-defining-indias-global-capability-centers-gccs-story-in-2025-blog"},
+  PEND:{name:"Source pending",pub:"No linked source yet",date:"",tier:"Pending",url:""}
+};
+
+const COUNT_CLAIMS = [
+  {label:"Zinnov–nasscom, FY26",val:2117,unit:"companies",what:"2,117 GCCs, 2.36M people, $98.4B. 583 are mid-market firms. Data as of March 2026.",src:"S2"},
+  {label:"Zinnov–nasscom, FY26",val:3728,unit:"centres",what:"3,728 units: the same companies counted per centre.",src:"S2"},
+  {label:"MeitY citing nasscom, FY24",val:1700,unit:"companies",what:"More than 1,700 GCCs, 1.9M people, $64.6B. Still the figure most quoted by government in late 2025.",src:"S1"},
+  {label:"Vestian, Jul 2025",val:1700,unit:"companies",what:"Nearly 1,700 GCCs, with the city split shown alongside.",src:"S3"},
+  {label:"Speeches and press",val:2000,unit:"unclear",what:"\"2,000+\" with no stated definition or date.",src:"PEND"}
+];
+const CONFLICTS = [
+  {title:"How many GCCs in Bengaluru?",a:{big:"487",txt:"GCC companies with a centre in Bengaluru. Vestian, Jul 2025.",src:"S3"},b:{big:"880+",txt:"GCC centres in Bengaluru. Zinnov, Jan 2026.",src:"S10"},read:"Both can be right: one counts companies, the other counts centres. The same Zinnov post counts 1,760+ centres in India by end-2025, while the FY26 landscape counts 3,728 units, another definitional gap."},
+  {title:"Maharashtra's GCC target",a:{big:"400",txt:"new centres, 4 lakh jobs. Cabinet approval, Sep 2025.",src:"S9"},b:{big:"~200",txt:"centres, 4 lakh jobs by 2030. CBRE, Aug 2026.",src:"S7"},read:"Same job target, half the centres. We show both until the notified policy text is linked."},
+  {title:"Karnataka's mid-market GCCs",a:{big:"230+",txt:"mid-market GCCs in Karnataka.",src:"S4"},b:{big:"240+",txt:"mid-sized GCC units in Bengaluru alone.",src:"S4"},read:"Both numbers are in the same press release. A city cannot hold more than its state, unless one counts companies and the other counts units."}
+];
+const CITY_COUNTS = [["Bengaluru",487],["Hyderabad",273],["Delhi NCR",272],["Mumbai",207],["Pune",178],["Chennai",162]];
+
+const SECTORS = ["BFSI","Technology","Retail & CPG","Life sciences & healthcare","Auto & engineering","Semiconductors","Aerospace & industrial","Energy","Telecom","Travel & transport","Professional services"];
+
+// rent: INR / sq ft / month. gcc: companies (Vestian); null = not published. talentK: thousands (estimate). conn: intl flights 1-5 (judgement)
+const CITIES = [
+  {id:"blr",name:"Bengaluru",state:"Karnataka",pol:"KA",tier:1,gcc:487,rent:132.6,rentSrc:"S5",talentK:2000,salIdx:1.00,conn:5,clusters:["Outer Ring Road","Whitefield","Manyata Tech Park","North Bengaluru","Electronic City"],strengths:["Technology","Semiconductors","Retail & CPG","BFSI","Auto & engineering","Aerospace & industrial"],note:"Largest GCC cluster and talent pool, and the highest metro rent after Mumbai."},
+  {id:"hyd",name:"Hyderabad",state:"Telangana",pol:"TG",tier:1,gcc:273,rent:76.8,rentSrc:"S5",talentK:1000,salIdx:0.95,conn:4,clusters:["HITEC City","Gachibowli","Financial District","Kokapet"],strengths:["Life sciences & healthcare","BFSI","Technology","Retail & CPG"],note:"Many recent US entrants. Lowest metro market rent in Q1 CY26."},
+  {id:"pun",name:"Pune",state:"Maharashtra",pol:"MH",tier:1,gcc:178,rent:90.2,rentSrc:"S5",talentK:700,salIdx:0.93,conn:3,clusters:["Kharadi","Hinjewadi","Baner","Hadapsar","Yerwada"],strengths:["BFSI","Auto & engineering","Technology"],note:"Banking operations and engineering. Fewer direct international flights."},
+  {id:"chn",name:"Chennai",state:"Tamil Nadu",pol:"TN",tier:1,gcc:162,rent:83.3,rentSrc:"S5",talentK:800,salIdx:0.90,conn:4,clusters:["OMR","Guindy","Perungudi","Taramani"],strengths:["Auto & engineering","BFSI","Life sciences & healthcare","Telecom"],note:"Deep engineering base; popular for BFSI operations and auto R&D."},
+  {id:"ggn",name:"Gurugram",state:"Haryana",pol:"HR",tier:1,gcc:272,ncr:true,rent:102.9,rentSrc:"S5",talentK:600,salIdx:0.98,conn:5,clusters:["Cyber City","Golf Course Ext. Road","Sohna Road"],strengths:["BFSI","Technology","Telecom","Professional services"],note:"GCC count and rent are for all of Delhi NCR; no city split is published."},
+  {id:"noi",name:"Noida",state:"Uttar Pradesh",pol:"UP",tier:1,gcc:272,ncr:true,rent:102.9,rentSrc:"S5",talentK:400,salIdx:0.92,conn:4,clusters:["Sector 62","Noida Expressway","Greater Noida"],strengths:["Technology","Telecom","Life sciences & healthcare"],note:"GCC count and rent are for all of Delhi NCR. Noida rents are usually below Gurugram's."},
+  {id:"mum",name:"Mumbai",state:"Maharashtra",pol:"MH",tier:1,gcc:207,rent:170.8,rentSrc:"S5",talentK:600,salIdx:1.00,conn:5,clusters:["BKC","Powai","Andheri–Kurla","Thane–Belapur Road"],strengths:["BFSI","Retail & CPG"],note:"Highest rents; most GCCs sit in Powai, Thane or Navi Mumbai."},
+  {id:"amd",name:"Ahmedabad & GIFT City",state:"Gujarat",pol:"GJ",tier:2,gcc:null,rent:55,rentSrc:"S8",talentK:200,salIdx:0.82,conn:3,clusters:["SG Highway","GIFT City"],strengths:["BFSI","Life sciences & healthcare"],note:"Gujarat publishes the most detailed incentive rates of any state."},
+  {id:"jai",name:"Jaipur",state:"Rajasthan",pol:"RJ",tier:2,gcc:null,rent:50,rentSrc:"S8",talentK:150,salIdx:0.78,conn:3,clusters:["Mahindra World City","Sitapura"],strengths:["Technology","BFSI"],note:"Rajasthan's policy reimburses 30% of salaries for three years for its first qualifying GCCs."},
+  {id:"vsk",name:"Visakhapatnam",state:"Andhra Pradesh",pol:"AP",tier:2,gcc:null,rent:45,rentSrc:"S8",talentK:100,salIdx:0.75,conn:2,clusters:["Rushikonda IT Park","Madhurawada"],strengths:["Technology"],note:"Covered by Andhra Pradesh's IT & GCC Policy 4.0."},
+  {id:"idr",name:"Indore",state:"Madhya Pradesh",pol:"MP",tier:2,gcc:null,rent:45,rentSrc:"S8",talentK:80,salIdx:0.72,conn:2,clusters:["Super Corridor","Crystal IT Park"],strengths:["Technology"],note:"MP targets 50+ GCCs; few anchor GCCs so far."},
+  {id:"koc",name:"Kochi",state:"Kerala",pol:"KL",tier:2,gcc:null,rent:48,rentSrc:"S8",talentK:150,salIdx:0.80,conn:3,clusters:["Infopark Kakkanad","SmartCity Kochi"],strengths:["Technology"],note:"Kerala's GCC policy is still a draft."},
+  {id:"cbe",name:"Coimbatore",state:"Tamil Nadu",pol:"TN",tier:2,gcc:null,rent:48,rentSrc:"S8",talentK:120,salIdx:0.78,conn:2,clusters:["Saravanampatti","TIDEL Park"],strengths:["Auto & engineering"],note:"Engineering colleges and a manufacturing base."},
+  {id:"kol",name:"Kolkata",state:"West Bengal",pol:"WB",tier:2,gcc:null,rent:55,rentSrc:"S8",talentK:300,salIdx:0.80,conn:3,clusters:["Sector V, Salt Lake","New Town"],strengths:["BFSI"],note:"Low cost, mostly operations work. West Bengal is not on CBRE's list of GCC policies."}
+];
+
+// status: Dedicated | Framework | Draft | Incentives only | Not listed
+const POLICIES = {
+  KA:{state:"Karnataka",name:"Karnataka GCC Policy 2024–29",status:"Dedicated",date:"Released 19 Nov 2024",target:"500 new GCCs and ~3.5 lakh jobs by 2029",facts:["50% reimbursement of internship stipends, up to 1 lakh students","Beyond Bengaluru: 5-year electricity duty exemption, rent and EPF support","Property tax reimbursement; nano GCCs (5–50 staff) eligible","Approvals within 45 days"],src:"PKA"},
+  MH:{state:"Maharashtra",name:"Maharashtra GCC Policy 2025",status:"Dedicated",date:"Cabinet approved 30 Sep 2025",target:"Sources disagree: 400 centres (Sep 2025) vs ~200 centres (CBRE, Aug 2026); both say 4 lakh jobs",facts:["Capital subsidy linked to fixed capital investment","Payroll reimbursement for high-skilled staff","Rent and power tariff assistance; R&D and patent support","Interest subsidy in tier-2 regions"],src:"PMH",src2:"S9"},
+  HR:{state:"Haryana",name:"Haryana GCC Policy 2026",status:"Dedicated",date:"Dated 27 May 2026, five years",target:"100+ new GCCs and 30,000+ jobs",facts:["Capex reimbursement 50% (non-TOD Gurugram), 65% (TOD Gurugram) or 75% (other districts), paid over 10 years","Opex 50–65% for 5–9 years, capped at ₹75 L per 100 employees or ₹15 Cr a year","Up to ₹1 L per employee; R&D grants up to ₹50 Cr per centre","8% interest on delayed incentives. JLL's capex caps (₹2.5 Cr per 100 staff or ₹75 Cr leased) read inconsistently, so check the notified text"],src:"PHR",src2:"PHR2"},
+  UP:{state:"Uttar Pradesh",name:"Uttar Pradesh GCC Policy",status:"Dedicated",date:"Final policy published 2025",target:"Not stated in source",facts:["Level-1 in Noida or Ghaziabad: ₹20 Cr investment or 200 staff","Land subsidy 30–50%; 100% stamp duty exemption","5% interest subsidy; opex support for lease, bandwidth, cloud and power","Payroll and recruitment subsidies for specified groups"],src:"PUP"},
+  GJ:{state:"Gujarat",name:"Gujarat GCC Policy 2025–30",status:"Dedicated",date:"Launched Feb 2025; Operational Guidelines 1.0 issued 3 Oct 2026",target:"250+ new GCCs and 50,000+ jobs by 2030",facts:["Capex 20% (non-IT) or 30% (IT), up to ₹50 Cr; ₹200 Cr for mega projects","Opex 15%, up to ₹20 Cr; ₹400 Cr for mega projects","One-time 50% of CTC per new hire, up to ₹60k (women) or ₹50k (men); EPF support 5 years","7% interest subsidy; 100% electricity duty exemption for 5 years"],src:"PGJ",src2:"PGJ3"},
+  RJ:{state:"Rajasthan",name:"Rajasthan GCC Policy 2025",status:"Dedicated",date:"Valid to 31 Mar 2029",target:"200+ GCCs and 1.5 lakh jobs by 2030",facts:["30% salary reimbursement for 3 years, up to ₹1.25 L per employee and ₹10 Cr per GCC a year","Rent 50% for 3 years then 25% for 2, up to ₹5 Cr a year","Salary and rent support limited to the first 10 GCCs per size band","Capital subsidy 30% up to ₹10 Cr (investment route)"],src:"PRJ"},
+  MP:{state:"Madhya Pradesh",name:"Madhya Pradesh GCC Policy 2025",status:"Dedicated",date:"Launched Feb 2025",target:"50+ GCCs and 37,000+ jobs",facts:["Capex, payroll, upskilling and R&D incentives (rates not in summary)"],src:"PMP"},
+  AP:{state:"Andhra Pradesh",name:"AP IT & GCC Policy 4.0 (2024–29)",status:"Dedicated",date:"Government order 12 Dec 2024",target:"Not stated in source",facts:["Recruitment, rental, power and employee incentives for GCCs","Rates set in separate operating guidelines"],src:"PAP"},
+  TG:{state:"Telangana",name:"Telangana GCC framework; new policy in drafting",status:"Framework",date:"Draft reported 17 Sep 2026",target:"Not stated",facts:["New policy expected to target AI, space, semiconductors, quantum and life sciences","Push to tier-2 towns (Warangal, Karimnagar and others)","Targeted rather than blanket incentives"],src:"PTG",src2:"S7"},
+  DL:{state:"Delhi",name:"Delhi GCC framework",status:"Framework",date:"Per CBRE, Aug 2026",target:"Not stated",facts:["Framework adopted; no details in source"],src:"S7"},
+  KL:{state:"Kerala",name:"Kerala GCC policy (draft)",status:"Draft",date:"Per CBRE, Aug 2026",target:"~80 GCCs and 1.6 lakh jobs",facts:["Draft policy proposed; incentives not final"],src:"S7"},
+  TN:{state:"Tamil Nadu",name:"Tamil Nadu: GCC employee incentives",status:"Incentives only",date:"Per CBRE, Aug 2026",target:"Not stated",facts:["No dedicated GCC policy on CBRE's list; incentives for GCC employees introduced"],src:"S7"},
+  WB:{state:"West Bengal",name:"No GCC policy listed",status:"Not listed",date:"Per CBRE, Aug 2026",target:"",facts:["Not on CBRE's list of states with GCC policies or frameworks"],src:"S7"}
+};
+const POLSCORE = {"Dedicated":1,"Framework":0.6,"Draft":0.4,"Incentives only":0.4,"Not listed":0};
+
+// changes after which a board pack figure is stale
+const CHANGES = [
+  {date:"2026-03-31",rec:"count",what:"India GCC count",before:"1,700+ companies (FY24)",after:"2,117 companies (FY26)",src:"S2"},
+  {date:"2026-04-01",rec:"rent",what:"Office rents (Q1 CY26 release)",before:"Ledger v1 Grade A averages (e.g. Bengaluru ₹92)",after:"Market rents (e.g. Bengaluru ₹132.6)",src:"S5"},
+  {date:"2026-05-27",rec:"policy:HR",what:"Haryana",before:"No dedicated GCC policy",after:"Haryana GCC Policy 2026 notified",src:"PHR"},
+  {date:"2026-07-06",rec:"policy:HR",what:"Haryana rates",before:"Incentive types only",after:"Rates published (JLL)",src:"PHR2"},
+  {date:"2026-08-14",rec:"policy:MH",what:"Maharashtra target",before:"400 new centres",after:"~200 centres per CBRE (both say 4 lakh jobs)",src:"S7"},
+  {date:"2026-09-17",rec:"policy:TG",what:"Telangana",before:"Relies on ICT policy",after:"New GCC policy in drafting, targeted incentives",src:"PTG"},
+  {date:"2026-10-03",rec:"policy:GJ",what:"Gujarat",before:"Operational guidelines pending",after:"Operational Guidelines 1.0 issued",src:"PGJ2"}
+];
+
+// [name, hq, sector, cities, band, status, url|null, source label, date]
+const GCCS = [
+ ["Vanguard","USA","BFSI",["hyd"],"<1k (2,500 planned)","Ramping","https://deccanchronicle.com/southern-states/telangana/vanguard-to-establish-first-india-gcc-in-hyderabad-1870017","Deccan Chronicle","2025"],
+ ["McDonald's Global Office","USA","Retail & CPG",["hyd"],"<1k (2,000 planned)","Ramping","https://www.nrn.com/quick-service/mcdonald-s-opens-a-global-capacity-center-in-india","Nation's Restaurant News","2025"],
+ ["Eli Lilly","USA","Life sciences & healthcare",["hyd"],"<1k","Ramping","https://www.indianpharmapost.com/digitisation/eli-lilly-inaugurates-global-capability-centre-in-hyderabad-to-advance-ai-initiatives-17540","Indian Pharma Post","2025"],
+ ["Lloyds Banking Group Technology Centre","UK","BFSI",["hyd"],"<1k (600 planned)","Ramping","https://finextra.com/newsarticle/42516/lloyds-bank-sets-up-tech-centre-in-hyderabad","Finextra","2023"],
+ ["Sanofi Global Hub","France","Life sciences & healthcare",["hyd"],"1k–5k (2,600 → 4,500+)","Operating","https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/","Sights in Plus","2026"],
+ ["Arch Capital Group","Bermuda","BFSI",["pun"],"<1k (350+)","Operating","https://cxotoday.com/media-coverage/arch-capital-group-opens-global-capabilities-centers-in-india/","CXOToday","2025-08"],
+ ["JLL Business Services","USA","Professional services",["hyd","ggn"],"1k–5k (to 1,600 in Hyderabad)","Ramping","https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/","CXO Digital Pulse","2026-08"],
+ ["Acumatica","USA","Technology",["hyd"],"<1k (30+)","Ramping","https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad","Telangana Today","2026-08"],
+ ["Southwest Airlines","USA","Travel & transport",["hyd"],"~1,000 planned","Announced","https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/","Sights in Plus","2026"],
+ ["Zimmer Biomet","USA","Life sciences & healthcare",["blr"],"~500 over 3 years","Announced","https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/","Sights in Plus","2026"],
+ ["Nestlé Business Solutions","Switzerland","Retail & CPG",["hyd"],"Not disclosed","Announced","https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/","Sights in Plus","2026"],
+ ["Costco","USA","Retail & CPG",["hyd"],"~1,000 initial target","Announced","https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756","ETV Bharat","2025-07"],
+ ["Nationwide Mutual Insurance","USA","BFSI",["hyd"],"<1k (500–1,000 expected)","Operating","https://telanganatoday.com/us-insurance-giant-nationwide-opens-global-services-centre-in-hyderabad","Telangana Today","2026-07"],
+ ["Walmart Global Tech","USA","Retail & CPG",["blr","chn"],"10k+","Operating","https://english.punjabkesari.com/india/2025/04/17/walmart-expands-in-india-with-new-tech-hub-in-chennai","Punjab Kesari (new Chennai hub)","2025-04"],
+ ["Target in India","USA","Retail & CPG",["blr"],"5k–10k","Operating","https://yourstory.com/enterprise-story/2026/08/target-in-india-global-capability-hub","YourStory","2026-08"],
+ ["Lowe's India","USA","Retail & CPG",["blr"],"1k–5k","Operating","https://corporate.lowes.com/newsroom/press-releases/lowes-announces-james-brandt-managing-director-lowes-india-05-05-17","Lowe's press release","2017-05"],
+ ["Tesco Business Solutions","UK","Retail & CPG",["blr"],"1k–5k","Operating","https://www.peoplematters.in/news/employee-engagement/tesco-plans-for-india-expansion-to-hire-1000-people-35333","People Matters",""],
+ ["JPMorgan Chase","USA","BFSI",["mum","blr","hyd"],"10k+ (55,000+)","Operating","https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/","Reuters factbox via Stockopedia","2026-05"],
+ ["Goldman Sachs","USA","BFSI",["blr","hyd"],"5k–10k (~9,000)","Operating","https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/","Reuters factbox via Stockopedia","2026-05"],
+ ["Wells Fargo","USA","BFSI",["hyd","blr","chn"],"10k+ (30,000+; Chennai closing by 2027)","Operating","https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/","Reuters factbox via Stockopedia","2026-05"],
+ ["Morgan Stanley","USA","BFSI",["mum","blr"],"5k–10k","Operating","https://www.morganstanley.com/articles/morgan-stanley-india-grow-your-career","Morgan Stanley careers page",""],
+ ["Citi","USA","BFSI",["pun", "chn", "blr", "mum"],"10k+ (33,000+)","Operating","https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/","Reuters factbox via Stockopedia","2026-05"],
+ ["American Express","USA","BFSI",["ggn", "mum", "blr", "chn"],"5k–10k","Operating","https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/","Reuters factbox via Stockopedia","2026-05"],
+ ["Fidelity Investments","USA","BFSI",["blr", "chn"],"5k–10k (7,000+)","Operating","https://yourstory.com/enterprise-story/2023/07/fidelity-india-technology-leadership-financial-services","YourStory","2023-07"],
+ ["BNY","USA","BFSI",["pun","chn"],"10k+","Operating","https://www.bny.com/corporate/in/en/operations.html","BNY India operations page",""],
+ ["Synchrony","USA","BFSI",["hyd"],"1k–5k","Operating","https://www.cxodigitalpulse.com/synchrony-opens-largest-global-experience-centre-in-hyderabad/","CXO Digital Pulse",""],
+ ["Mastercard","USA","BFSI",["pun","ggn"],"1k–5k","Operating","https://www.mastercard.com/news/ap/en/newsroom/press-releases/en/2024/mastercard-opens-new-state-of-the-art-tech-hub-in-pune-india/","Mastercard press release","2024-10"],
+ ["Deutsche Bank (DB India)","Germany","BFSI",["pun","blr","mum"],"10k+","Operating","https://www.peoplematters.in/news/talent-acquisition/deutsche-bank-plans-to-hire-1000-techies-in-india-28721","People Matters",""],
+ ["Barclays","UK","BFSI",["chn", "noi", "mum"],"5k–10k (~9,000)","Operating","https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/","Reuters factbox via Stockopedia","2026-05"],
+ ["HSBC","UK","BFSI",["hyd","pun","blr"],"10k+","Operating","https://www.hsbc.com/careers/where-we-hire/india/technology","HSBC Technology India page",""],
+ ["Standard Chartered GBS","UK","BFSI",["chn","blr"],"5k–10k","Operating","https://www.sc.com/en/global-careers/experienced-hire/spotlight/careers-in-gbs-india/","Standard Chartered GBS India page",""],
+ ["NatWest Group","UK","BFSI",["ggn","chn","blr"],"5k–10k","Operating","https://www.natwestgroup.com/who-we-are/at-a-glance/worldwide-locations/natwest-group-india.html","NatWest Group India page",""],
+ ["UBS","Switzerland","BFSI",["pun","mum","hyd"],"5k–10k","Operating","https://www.finews.asia/finance/44672-ubs-global-capability-center-technology-hyderabad-india","finews.asia",""],
+ ["Microsoft India Development Center","USA","Technology",["hyd","blr","noi"],"10k+","Operating","https://microsoft.com/en-in/msidc","Microsoft IDC page",""],
+ ["Google","USA","Technology",["blr","hyd"],"10k+","Operating","https://www.business-standard.com/technology/tech-news/google-opens-ananta-campus-in-bengaluru-one-of-its-largest-globally-125021900899_1.html","Business Standard (Ananta campus)","2025-02"],
+ ["Cisco","USA","Technology",["blr"],"5k–10k","Operating","https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2007/m10/cisco-outlines-globalisation-vision-at-unveiling-of-campus-in-bangalore.html","Cisco newsroom (Bengaluru campus)","2007-10"],
+ ["SAP Labs India","Germany","Technology",["blr","ggn","pun"],"10k+","Operating","https://www.sap.com/india/about/labs-india.html","SAP Labs India page",""],
+ ["Adobe","USA","Technology",["noi","blr"],"5k–10k","Operating","https://www.thenewsminute.com/atom/adobe-expands-india-footprint-opens-new-office-host-2000-employees-176313","The News Minute",""],
+ ["Qualcomm","USA","Semiconductors",["hyd","blr","chn"],"10k+","Operating","https://www.businesstoday.in/amp/technology/news/story/qualcomms-tapes-out-2nm-chip-design-with-their-indian-design-labs-515107-2026-02-07","Business Today","2026-02"],
+ ["Intel","USA","Semiconductors",["blr","hyd"],"10k+","Operating","https://cxotoday.com/media-coverage/intel-india-opens-a-new-state-of-the-art-design-engineering-center-in-bengaluru/","CXOToday",""],
+ ["Novartis","Switzerland","Life sciences & healthcare",["hyd"],"5k–10k","Operating","https://en.channeliam.com/2025/12/19/novartis-expands-india-biomedical-research-drug-development/","Channel IAM","2025-12"],
+ ["AstraZeneca","UK","Life sciences & healthcare",["chn","blr"],"1k–5k","Operating","https://www.theweek.in/wire-updates/business/2025/06/26/mcm3-biz-astrazeneca.html","The Week (PTI)","2025-06"],
+ ["Optum (UnitedHealth Group)","USA","Life sciences & healthcare",["hyd","ggn","noi","blr","chn"],"10k+ (33,000+)","Operating","https://www.optum.in/content/dam/optum3/optum/india/resources/Optum%20overview%20in%20India_final%20Aug%202023_digital.pdf","Optum India overview","2023-08"],
+ ["Bosch Global Software Technologies","Germany","Auto & engineering",["blr","cbe","hyd","pun"],"10k+","Operating","https://bosch-softwaretechnologies.com/en/locations","Bosch BGSW locations page",""],
+ ["Mercedes-Benz R&D India","Germany","Auto & engineering",["blr"],"5k–10k","Operating","https://group.mercedes-benz.com/careers/about-us/locations/location-detail-page-18185.html","Mercedes-Benz location page",""],
+ ["Ford Business Solutions","USA","Auto & engineering",["chn"],"10k+","Operating","https://www.business-standard.com/companies/news/post-india-exit-chennai-brains-key-to-ford-s-top-selling-models-globally-124082201075_1.html","Business Standard","2024-08"],
+ ["Renault Nissan Technology & Business Centre","France / Japan","Auto & engineering",["chn"],"5k–10k","Operating","https://autocarpro.in/news/renault-nissan-technology-business-centre-india-inaugurates-new-workspace-in-tamil-nadu-122744","Autocar Professional",""],
+ ["Caterpillar","USA","Aerospace & industrial",["chn","blr"],"1k–5k","Operating","https://www.caterpillar.com/en/company/global-footprint/india/locations.html","Caterpillar India locations page",""],
+ ["Boeing India Engineering & Technology Center","USA","Aerospace & industrial",["blr","chn"],"1k–5k","Operating","https://www.businesstoday.in/amp/industry/story/boeing-lays-off-up-to-180-employees-at-bengaluru-tech-centre-amid-global-job-cuts-469021-2025-03-23","Business Today","2025-03"],
+ ["Airbus India","France","Aerospace & industrial",["blr"],"1k–5k","Operating","https://www.airbus.com/en/newsroom/press-releases/2026-03-airbus-scales-up-make-in-india-with-new-5000-seater-technology-centre-in-bengaluru","Airbus press release (5,000-seat centre)","2026-03"],
+ ["Shell","UK","Energy",["blr","chn"],"5k–10k","Operating","https://businessworld.in/article/shell-to-hire-1000-professionals-this-year-at-bengaluru-centre-97451","BusinessWorld",""],
+ ["Nokia","Finland","Telecom",["blr", "chn"],"10k+ (17,000+ in India)","Operating","https://www.nokia.com/sites/default/files/2024-04/nokia-making-in-india-for-india-and-the-world_18_april_2024.pdf","Nokia India fact sheet","2024-04"]
+].map((g,i)=>({id:"g"+String(i+1).padStart(2,"0"),name:g[0],hq:g[1],sector:g[2],cities:g[3],band:g[4],status:g[5],url:g[6]||null,srcLabel:g[7]||"",date:g[8]||""}));
+
+// [name, category, cities, services, site]
+const ALL=["blr","hyd","pun","chn","ggn","noi","mum","amd","jai","vsk","idr","koc","cbe","kol"];
+const PROVIDERS = [
+ ["ANSR","Build-operate-transfer & setup",["blr","hyd","pun","chn"],"End-to-end GCC setup and operation","https://ansr.com"],
+ ["Genpact","Build-operate-transfer & setup",["blr","hyd","ggn","noi","kol","jai"],"Operations partner and GCC build services","https://www.genpact.com"],
+ ["Deloitte India","Setup advisory, tax & accounting",["blr","hyd","mum","ggn","pun","chn"],"Entry strategy, entity setup, tax","https://www.deloitte.com/in"],
+ ["EY India","Setup advisory, tax & accounting",["blr","hyd","mum","ggn","pun","chn","koc","kol"],"GCC strategy, tax, transfer pricing","https://www.ey.com/en_in"],
+ ["KPMG India","Setup advisory, tax & accounting",["blr","hyd","mum","ggn","pun","chn"],"Entity setup, tax, compliance","https://kpmg.com/in"],
+ ["PwC India","Setup advisory, tax & accounting",["blr","hyd","mum","ggn","kol","chn"],"GCC design, tax, transformation","https://www.pwc.in"],
+ ["Grant Thornton Bharat","Setup advisory, tax & accounting",["blr","mum","ggn","pun","chn","kol"],"Incorporation, accounting, compliance","https://www.grantthornton.in"],
+ ["Zinnov","Advisory & market intelligence",["blr","ggn"],"Location strategy, benchmarks; also a data publisher","https://zinnov.com"],
+ ["Cyril Amarchand Mangaldas","Legal",["mum","blr","ggn","chn","hyd"],"Corporate, employment and real estate law","https://www.cyrilshroff.com"],
+ ["AZB & Partners","Legal",["mum","blr","ggn","chn","pun"],"Corporate structuring, employment, tax","https://www.azbpartners.com"],
+ ["Khaitan & Co","Legal",["mum","blr","ggn","kol","chn"],"Entity setup, employment, GCC policy advice","https://www.khaitanco.com"],
+ ["Trilegal","Legal",["mum","blr","ggn"],"Corporate, employment, data protection","https://trilegal.com"],
+ ["CBRE India","Real estate & workplace",["blr","hyd","pun","chn","ggn","noi","mum","kol","amd"],"Site selection, leasing, fit-out management","https://www.cbre.co.in"],
+ ["JLL India","Real estate & workplace",["blr","hyd","pun","chn","ggn","noi","mum","kol","amd","koc"],"Location strategy, leasing, design and build","https://www.jll.com/en-in"],
+ ["Cushman & Wakefield India","Real estate & workplace",["blr","hyd","pun","chn","ggn","noi","mum","kol","amd"],"Leasing, workplace strategy","https://www.cushmanwakefield.com/en/india"],
+ ["Colliers India","Real estate & workplace",["blr","hyd","pun","chn","ggn","mum","kol"],"Leasing and occupier advisory","https://www.colliers.com/en-in"],
+ ["Vestian","Real estate & workplace",["blr","hyd","pun","chn","ggn","mum"],"Occupier-only advisory, GCC research","https://www.vestian.com"],
+ ["WeWork India","Flexible workspace",["blr","hyd","pun","chn","ggn","noi","mum"],"Managed offices for early teams","https://wework.co.in"],
+ ["Smartworks","Flexible workspace",["blr","hyd","pun","chn","ggn","noi","mum","kol"],"Managed campuses for large teams","https://www.sworks.co.in"],
+ ["Awfis","Flexible workspace",ALL,"Flexible desks and managed offices","https://www.awfis.com"],
+ ["Deel","Employer of record & payroll",ALL,"Hire before your entity exists","https://www.deel.com"],
+ ["Multiplier","Employer of record & payroll",ALL,"EOR and payroll","https://www.usemultiplier.com"],
+ ["Remote","Employer of record & payroll",ALL,"EOR and contractor management","https://remote.com"],
+ ["TeamLease Services","Hiring & staffing",ALL,"Staffing, payroll, compliance","https://www.teamlease.com"],
+ ["Xpheno","Hiring & staffing",["blr","hyd","pun","chn","ggn","mum"],"Specialist tech hiring","https://www.xpheno.com"],
+ ["Randstad India","Hiring & staffing",["blr","hyd","pun","chn","ggn","mum","kol"],"Permanent and contract hiring","https://www.randstad.in"]
+].map((p,i)=>({id:"p"+String(i+1).padStart(2,"0"),name:p[0],cat:p[1],cities:p[2],services:p[3],site:p[4]}));
+const provByName = n => PROVIDERS.find(p=>p.name===n);
+
+const SEED_RECEIPTS = [
+ {id:"r1",prov:"ANSR",client:"Arch Capital Group",what:"Partnered with Arch Capital on its GCCs in Pune and Thiruvananthapuram (350+ employees planned; Hyderabad to follow). The source does not say what ANSR's role covered.",city:"pun",period:"Announced Aug 2025",tier:"Reported",url:"https://cxotoday.com/media-coverage/arch-capital-group-opens-global-capabilities-centers-in-india/",srcLabel:"CXOToday, 1 Aug 2025"},
+ {id:"r5",prov:"Khaitan & Co",client:"Arch Capital Group",what:"Legal advisor to Arch in establishing its GCCs in Pune and Thiruvananthapuram.",city:"pun",period:"Announced Aug 2025",tier:"Reported",url:"https://cxotoday.com/media-coverage/arch-capital-group-opens-global-capabilities-centers-in-india/",srcLabel:"CXOToday, 1 Aug 2025"},
+ {id:"r2",prov:"Genpact",client:"Nestlé Business Solutions",what:"Partner on Nestlé's new GCC in Hyderabad. The source does not say what Genpact's role covers.",city:"hyd",period:"2026",tier:"Reported",url:"https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/",srcLabel:"Sights in Plus, Jul 2026"},
+ {id:"r3",prov:"Zinnov",client:"Not named",what:"Says it has set up or transformed 220+ GCCs. No clients or dates are named, so it cannot move past Claimed.",city:"",period:"Ongoing",tier:"Claimed",url:"https://zinnov.com/offerings/gcc-setup-and-transformation/",srcLabel:"Zinnov website"},
+ {id:"r4",prov:"ANSR",client:"Not named",what:"Says it is a Leader in Everest Group's 2025 GCC setup assessment. That is an analyst rating, not a delivery.",city:"",period:"2025",tier:"Claimed",url:"https://ansr.com/ansr-vs-others/",srcLabel:"ANSR website"}
+];
+
+const LADDER = [["ann","Announced or rumoured"],["ent","Entity incorporated (MCA)"],["space","Space approved (SEZ / STPI)"],["lease","Lease signed"],["hire","Hiring"],["op","Operational"]];
+// each step: {d: date text, t: text, url} | "unk" (not checked) | null (not yet)
+const SIGNALS = [
+ {name:"Illustrative: US specialty insurer",sample:true,sector:"BFSI",city:"pun",steps:{ann:null,ent:{d:"Month 0",t:"Indian private limited subsidiary incorporated"},space:{d:"Month 3",t:"Unit approved in SEZ approval committee minutes"},lease:null,hire:null,op:null}},
+ {name:"Illustrative: European medtech firm",sample:true,sector:"Life sciences & healthcare",city:"blr",steps:{ann:null,ent:{d:"Month 0",t:"Subsidiary incorporated"},space:null,lease:{d:"Month 4",t:"Lease named in a broker deal roundup"},hire:{d:"Month 5",t:"Job posts for India site lead and engineers"},op:null}},
+ {name:"Southwest Airlines",sector:"Travel & transport",city:"hyd",steps:{ann:{d:"2026",t:"Global Innovation Centre, ~1,000 roles planned",url:"https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/"},ent:"unk",space:"unk",lease:"unk",hire:"unk",op:null}},
+ {name:"Zimmer Biomet",sector:"Life sciences & healthcare",city:"blr",steps:{ann:{d:"2026",t:"~500 hires over three years",url:"https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/"},ent:"unk",space:"unk",lease:"unk",hire:"unk",op:null}},
+ {name:"Nationwide Mutual Insurance",sector:"BFSI",city:"hyd",steps:{ann:{d:"Jul 2025",t:"500–1,000 jobs expected",url:"https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756"},ent:"unk",space:"unk",lease:{d:"Jul 2025",t:"Raheja Mindspace reported",url:"https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756"},hire:"unk",op:{d:"8 Jul 2026",t:"Nationwide Global Services Center opened in Hyderabad",url:"https://telanganatoday.com/us-insurance-giant-nationwide-opens-global-services-centre-in-hyderabad"}}},
+ {name:"Costco",sector:"Retail & CPG",city:"hyd",steps:{ann:{d:"Jul 2025",t:"~1,000 initial hiring target; Knowledge City",url:"https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756"},ent:"unk",space:"unk",lease:"unk",hire:"unk",op:"unk"}},
+ {name:"JLL Business Services",sector:"Professional services",city:"hyd",steps:{ann:{d:"Aug 2026",t:"Second India hub after Gurugram",url:"https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"},ent:"unk",space:"unk",lease:{d:"Aug 2026",t:"120,000 sq ft",url:"https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"},hire:{d:"Aug 2026",t:"To ~1,600 in two years",url:"https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"},op:{d:"Aug 2026",t:"Opened",url:"https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"}}},
+ {name:"Acumatica",sector:"Technology",city:"hyd",steps:{ann:{d:"11 Aug 2026",t:"Engineering centre, Nanakramguda",url:"https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad"},ent:"unk",space:"unk",lease:"unk",hire:{d:"Aug 2026",t:"30+ staff, more to join",url:"https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad"},op:{d:"11 Aug 2026",t:"Opened",url:"https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad"}}}
+];
+
+// function mix by industry, % of headcount (eng, data, ops, svc). Our judgement from typical GCC role mixes.
+const SECTOR_MIX = {"BFSI":[50,20,20,10],"Technology":[65,20,10,5],"Retail & CPG":[45,25,20,10],"Life sciences & healthcare":[35,30,20,15],"Auto & engineering":[70,15,10,5],"Semiconductors":[80,15,5,0],"Aerospace & industrial":[70,15,10,5],"Energy":[45,25,20,10],"Telecom":[65,15,10,10],"Travel & transport":[35,20,20,25],"Professional services":[30,20,35,15]};
+const FUNCS = [
+  {id:"eng",label:"Software engineering",base:20,def:50},
+  {id:"data",label:"Data & AI",base:24,def:20},
+  {id:"ops",label:"Finance & business ops",base:9,def:20},
+  {id:"svc",label:"Customer & shared services",base:5.5,def:10}
+];
+const WEIGHTS = [
+  {id:"talent",label:"Talent depth",def:5},
+  {id:"eco",label:"GCC ecosystem size",def:4},
+  {id:"cost",label:"Low cost",def:3},
+  {id:"pol",label:"Dedicated state policy",def:2},
+  {id:"conn",label:"International flights",def:2},
+  {id:"peers",label:"Peers in our sample",def:1}
+];
+const MODELS = [
+  {id:"eor",label:"Employer of record",sub:"Hire in weeks",note:"Fastest start, no entity needed. A provider employs your staff for a monthly fee per person, so it gets expensive at scale. Usually a bridge for the first 20 to 50 people. (Our judgement)"},
+  {id:"bot",label:"Build-operate-transfer",sub:"Partner builds",note:"A partner sets up and runs the centre, then transfers it to you. Check the partner's delivery receipts first. (Our judgement)"},
+  {id:"own",label:"Own entity",sub:"Full control",note:"You incorporate and hire directly. Most control and lowest long-run cost; slowest start. (Our judgement)"}
+];
+const MODEL = {loaded:1.25, lead:0.05, leadLpa:60, sqftPerSeat:100, cam:12, otherPerHead:150000, fitout:4000, fx:88};
+// operating-model economics (our judgement from typical market quotes): EOR fee per person per month, BOT management fee as share of running cost, flexible-seat premium for EOR, one-time entity setup for own entity
+const OPMODEL = {eor:{fee:40000,flex:1.5,setup:0,start:"4–8 weeks"},bot:{mgmt:0.12,setup:0,start:"3–4 months"},own:{setup:6000000,start:"6–9 months"}};
+
+/* ============ HELPERS ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cityById = Object.fromEntries(CITIES.map(c=>[c.id,c]));
+const cityName = id => cityById[id]?.name || id;
+const fmt = n => n.toLocaleString("en-IN");
+const pool = k => k>=1000?(k/1000).toFixed(1)+"M":k+"k";
+const cr = inr => (inr/1e7).toLocaleString("en-IN",{maximumFractionDigits:0});
+const usdM = inr => (inr/MODEL.fx/1e6).toFixed(1);
+const store = {get(k,d){try{const v=localStorage.getItem("gccl2:"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("gccl2:"+k,JSON.stringify(v))}catch(e){}}};
+const srcChip = id => { const s=SOURCES[id]; if(!s) return ""; return `<button class="src ${s.tier==="Pending"?"pending":""}" data-src="${id}" title="${esc(s.pub+(s.date?", "+s.date:""))}">${s.tier==="Pending"?"source pending":esc(s.pub.split(/[ ,(]/)[0])+(s.date?" "+esc(s.date.slice(0,7)):"")}</button>`; };
+const linkChip = (url,label) => url?`<a class="src" href="${esc(url)}" target="_blank" rel="noopener">${esc(label||"source")} ↗</a>`:`<span class="src pending">source pending</span>`;
+const tierTag = t => `<span class="tier ${t}">${t==="Pending"?"Source pending":t}</span>`;
+const peersIn = (cid,sector) => GCCS.filter(g=>g.cities.includes(cid) && (!sector || g.sector===sector));
+const opt=(arr,any)=>`<option value="">${any}</option>`+arr.map(v=>Array.isArray(v)?`<option value="${esc(v[0])}">${esc(v[1])}</option>`:`<option>${esc(v)}</option>`).join("");
+
+/* ============ TABS ============ */
+const TABS = ["overview","planner","room","providers","signals","cities","gccs","ask"];
+function show(tab){
+  if(!TABS.includes(tab)) tab="overview";
+  TABS.forEach(t=>{ $("#v-"+t).hidden = t!==tab; $("#t-"+t).setAttribute("aria-selected", t===tab); });
+  try{ history.replaceState(null,"","#"+tab) }catch(e){}
+  window.scrollTo({top:0});
+  if(tab==="room") renderPack();
+  if(tab==="ask") setTimeout(()=>$("#q").focus(),50);
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>show(b.dataset.tab));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]"); if(g) show(g.dataset.go);});
+
+/* ============ DRAWER ============ */
+function openDrawer(html){ const d=$("#drawer"); d.innerHTML=`<div class="row"><button class="x" id="dclose" aria-label="Close">×</button></div>`+html; d.hidden=false; $("#scrim").hidden=false; $("#dclose").focus(); $("#dclose").onclick=closeDrawer; }
+function closeDrawer(){ $("#drawer").hidden=true; $("#scrim").hidden=true; }
+$("#scrim").onclick=closeDrawer;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeDrawer(); });
+function polSources(p){ return srcChip(p.src)+(p.src2?" "+srcChip(p.src2):""); }
+function openRecord(type,id){
+  if(type==="src"){ const s=SOURCES[id]; if(!s) return;
+    openDrawer(`<span class="eyebrow">Source</span><h2 id="dtitle">${esc(s.name)}</h2><dl><dt>Publisher</dt><dd>${esc(s.pub)}</dd><dt>Date</dt><dd>${esc(s.date||"—")}</dd><dt>Evidence level</dt><dd>${tierTag(s.tier)}</dd><dt>Link</dt><dd>${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">Open the source ↗</a>`:"None yet. Figures from this source are shown as estimates or pending."}</dd></dl>${CHANGES.filter(c=>c.src===id).map(c=>`<div class="stalebox"><b>Changed on ${c.date}: ${esc(c.what)}</b><span>Before: ${esc(c.before)}</span><span>Now: ${esc(c.after)}</span></div>`).join("")}`); return; }
+  if(type==="city"){ const c=cityById[id]; if(!c) return; const p=POLICIES[c.pol];
+    openDrawer(`<span class="eyebrow">City · ${esc(c.state)}</span><h2 id="dtitle">${esc(c.name)}</h2><p>${esc(c.note)}</p><dl>
+      <dt>GCCs (companies)</dt><dd class="num">${c.gcc?fmt(c.gcc)+(c.ncr?" (all of NCR)":""):"Not published"} ${c.gcc?srcChip("S3"):""}</dd>
+      <dt>Office rent</dt><dd class="num">₹${c.rent}/sq ft/mo ${srcChip(c.rentSrc)}</dd>
+      <dt>Tech talent pool</dt><dd class="num">~${pool(c.talentK)} ${srcChip("S6")}</dd>
+      <dt>Salary index</dt><dd class="num">${c.salIdx.toFixed(2)} vs Bengaluru ${srcChip("S6")}</dd>
+      <dt>Office clusters</dt><dd>${c.clusters.map(esc).join(", ")}</dd>
+      <dt>State policy</dt><dd><button class="linkish" data-rec="policy:${c.pol}">${esc(p.name)}</button> ${statusPill(p.status)}</dd>
+      <dt>GCCs in sample</dt><dd>${peersIn(c.id).map(g=>`<button class="linkish" style="font-weight:500" data-rec="gcc:${g.id}">${esc(g.name)}</button>`).join(", ")||"None yet"}</dd></dl>`); return; }
+  if(type==="policy"){ const p=POLICIES[id]; if(!p) return;
+    openDrawer(`<span class="eyebrow">State policy · ${esc(p.state)}</span><h2 id="dtitle">${esc(p.name)}</h2><dl><dt>Status</dt><dd>${statusPill(p.status)}</dd><dt>Dates</dt><dd>${esc(p.date)}</dd><dt>Target</dt><dd>${esc(p.target||"—")}</dd><dt>Sources</dt><dd>${polSources(p)}</dd></dl><h3>Incentives</h3><ul>${p.facts.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>${CHANGES.filter(c=>c.rec==="policy:"+id).map(c=>`<div class="stalebox"><b>Changed on ${c.date}</b><span>Before: ${esc(c.before)}</span><span>Now: ${esc(c.after)}</span></div>`).join("")}<p class="note">Rates come from advisory summaries. Check the notified policy text before relying on them.</p>`); return; }
+  if(type==="gcc"){ const g=GCCS.find(x=>x.id===id); if(!g) return;
+    openDrawer(`<span class="eyebrow">GCC · ${esc(g.sector)}</span><h2 id="dtitle">${esc(g.name)}</h2><dl><dt>Parent HQ</dt><dd>${esc(g.hq)}</dd><dt>Status</dt><dd>${esc(g.status)}</dd><dt>Headcount</dt><dd>${esc(g.band)}</dd><dt>Cities</dt><dd>${g.cities.map(c=>`<button class="linkish" style="font-weight:500" data-rec="city:${c}">${esc(cityName(c))}</button>`).join(", ")}</dd><dt>Source</dt><dd>${linkChip(g.url,g.srcLabel+(g.date?", "+g.date:""))}</dd></dl>${g.url?"":`<p class="note">Well known, but we have not linked a source for this record yet. In the product, a record without a source cannot be cited in a board pack.</p>`}`); return; }
+  if(type==="prov"){ const p=PROVIDERS.find(x=>x.id===id); if(!p) return; const rs=receipts().filter(r=>r.prov===p.name);
+    openDrawer(`<span class="eyebrow">Provider · ${esc(p.cat)}</span><h2 id="dtitle">${esc(p.name)}</h2><p>${esc(p.services)} ${linkChip(p.site,"own website")}</p><h3>Delivery receipts</h3>${rs.length?`<div class="receipts">${rs.map(receiptCard).join("")}</div>`:`<p class="muted">None yet.</p>`}`); return; }
+}
+document.addEventListener("click",e=>{
+  const s=e.target.closest("[data-src]"); if(s){ openRecord("src",s.dataset.src); return; }
+  const r=e.target.closest("[data-rec]"); if(r){ const [t,i]=r.dataset.rec.split(":"); openRecord(t,i); }
+});
+const statusPill = s => `<span class="pill ${s==="Dedicated"?"good":s==="Not listed"?"bad":"warn"}">${esc(s)}</span>`;
+
+/* ============ OVERVIEW ============ */
+(function(){
+  const max=4000;
+  $("#claims").innerHTML = COUNT_CLAIMS.map(c=>`<div class="claim">
+    <div><b>${esc(c.label)}</b> ${srcChip(c.src)}</div><div class="val">${fmt(c.val)}${c.unit==="unclear"?"+":""} <span class="muted" style="font-size:.78rem;font-family:var(--f-body)">${c.unit}</span></div>
+    <div class="track" aria-hidden="true"><i class="${c.unit==="centres"?"units":""}" style="width:${c.val/max*100}%"></i></div>
+    <div class="what">${esc(c.what)}</div></div>`).join("");
+  $("#citycounts").innerHTML = CITY_COUNTS.map(([c,n])=>`<div class="mb"><span>${c}</span><div class="t"><i style="width:${n/500*100}%"></i></div><span class="v num">${n}</span></div>`).join("");
+  $("#vestchip").innerHTML = srcChip("S3"); $("#zinchip").innerHTML = srcChip("S10");
+  $("#conflicts").innerHTML = CONFLICTS.map(c=>`<div style="display:flex;flex-direction:column;gap:10px"><h3>${esc(c.title)}</h3><div class="conflict">${[c.a,c.b].map(s=>`<div class="side"><span class="big">${esc(s.big)}</span><span style="font-size:.88rem">${esc(s.txt)}</span><span>${srcChip(s.src)}</span></div>`).join("")}</div><p class="note">${esc(c.read)}</p></div>`).join("");
+})();
+
+/* ============ PLANNER ============ */
+const P = Object.assign({sectors:["BFSI"],hc:300,t2:true,model:"own",mix:{},w:{}}, store.get("planner",{}));
+if(!Array.isArray(P.sectors)||!P.sectors.length) P.sectors=[P.sector||"BFSI"]; P.sectors=P.sectors.filter(s=>SECTORS.includes(s)); if(!P.sectors.length) P.sectors=["BFSI"]; delete P.sector;
+const CMP=Object.assign({mode:"top",n:2,ids:[]},store.get("cmp",{}));
+const saveCmp=()=>store.set("cmp",CMP);
+const allSectors=()=>P.sectors.length===SECTORS.length;
+const sectorLabel=()=>allSectors()?"multi-industry":P.sectors.length<=2?P.sectors.join(" & "):P.sectors.length+"-industry";
+function applySectorMix(){ FUNCS.forEach((f,i)=>{ P.mix[f.id]=Math.round(P.sectors.reduce((a,s)=>a+(SECTOR_MIX[s]||[f.def,f.def,f.def,f.def])[i],0)/P.sectors.length/5)*5; const el=document.getElementById("mx-"+f.id); if(el) el.value=P.mix[f.id]; }); }
+function renderSectorChips(){
+  $("#p-sectors").innerHTML=`<button type="button" class="chip" data-sec="*" aria-pressed="${allSectors()}">All industries</button>`+SECTORS.map(s=>`<button type="button" class="chip" data-sec="${esc(s)}" aria-pressed="${!allSectors()&&P.sectors.includes(s)}">${esc(s)}</button>`).join("");
+  $("#p-sectornote").textContent=(allSectors()?"All "+SECTORS.length+" industries":P.sectors.join(", "))+". The function mix below follows the industries you pick; drag the sliders to override.";
+}
+if(FUNCS.some(f=>P.mix[f.id]==null)) applySectorMix(); WEIGHTS.forEach(w=>{ if(P.w[w.id]==null) P.w[w.id]=w.def; });
+renderSectorChips();
+$("#p-sectors").addEventListener("click",e=>{ const b=e.target.closest("[data-sec]"); if(!b) return; const s=b.dataset.sec;
+  if(s==="*") P.sectors=allSectors()?["BFSI"]:SECTORS.slice();
+  else if(allSectors()) P.sectors=[s];
+  else if(P.sectors.includes(s)){ if(P.sectors.length>1) P.sectors=P.sectors.filter(x=>x!==s); }
+  else P.sectors=SECTORS.filter(x=>x===s||P.sectors.includes(x));
+  applySectorMix(); renderSectorChips(); plan(); });
+$("#p-hc").value = P.hc; $("#p-t2").checked = P.t2;
+$("#models").innerHTML = MODELS.map(m=>`<label for="m-${m.id}"><input type="radio" name="opmodel" id="m-${m.id}" value="${m.id}" ${P.model===m.id?"checked":""}><b>${m.label}</b><span class="muted">${m.sub}</span></label>`).join("");
+$("#mixset").insertAdjacentHTML("beforeend", FUNCS.map(f=>`<div class="slider"><label for="mx-${f.id}">${f.label}</label><output id="mo-${f.id}"></output><input type="range" id="mx-${f.id}" min="0" max="100" step="5" value="${P.mix[f.id]}"></div>`).join(""));
+$("#wset").insertAdjacentHTML("beforeend", WEIGHTS.map(w=>`<div class="slider"><label for="w-${w.id}">${w.label}</label><output id="wo-${w.id}"></output><input type="range" id="w-${w.id}" min="0" max="5" step="1" value="${P.w[w.id]}"></div>`).join(""));
+
+let RANK = [];
+function compute(){
+  const mixTot = FUNCS.reduce((a,f)=>a+P.mix[f.id],0);
+  const avgBase = mixTot?FUNCS.reduce((a,f)=>a+f.base*P.mix[f.id]/mixTot,0):FUNCS.reduce((a,f)=>a+f.base*f.def/100,0);
+  const list = CITIES.filter(c=>P.t2||c.tier===1).map(c=>{
+    const staff = P.hc*avgBase*1e5*c.salIdx*MODEL.loaded;
+    const lead = P.hc*MODEL.lead*MODEL.leadLpa*1e5*c.salIdx*MODEL.loaded;
+    const om = OPMODEL[P.model]||OPMODEL.own;
+    const seat = P.hc*MODEL.sqftPerSeat*(c.rent+MODEL.cam)*12*(P.model==="eor"?om.flex:1);
+    const other = P.hc*MODEL.otherPerHead;
+    const base = staff+lead+seat+other;
+    const fee = P.model==="eor"?P.hc*om.fee*12:P.model==="bot"?base*om.mgmt:0;
+    const total = base+fee;
+    const peers = GCCS.filter(g=>g.cities.includes(c.id) && P.sectors.includes(g.sector));
+    const strong = P.sectors.filter(s=>c.strengths.includes(s));
+    const pressure = P.hc/(c.talentK*1000)*100;
+    return {c,total,fee,setup:om.setup,start:om.start,perHead:total/P.hc,fit:P.model==="eor"?0:P.hc*MODEL.sqftPerSeat*MODEL.fitout,peers,pressure,pol:POLICIES[c.pol],strong,sectorFit:strong.length/P.sectors.length};
+  });
+  const rng=k=>{const v=list.map(k);return [Math.min(...v),Math.max(...v)]};
+  const nz=(v,a,b)=>b===a?1:(v-a)/(b-a);
+  const [cMin,cMax]=rng(x=>x.total), [tMin,tMax]=rng(x=>Math.log(x.c.talentK)), [pMin,pMax]=rng(x=>x.peers.length);
+  const wt=WEIGHTS.reduce((a,w)=>a+P.w[w.id],0)||1;
+  list.forEach(x=>{
+    x.s={cost:nz(cMax-x.total,0,cMax-cMin),
+      talent:Math.max(0,Math.min(1,nz(Math.log(x.c.talentK),tMin,tMax)*0.85+0.15*x.sectorFit-(x.pressure>0.3?0.25:x.pressure>0.12?0.1:0))),
+      eco:x.c.gcc?Math.min(1,x.c.gcc/487):0, pol:POLSCORE[x.pol.status]??0, conn:x.c.conn/5, peers:nz(x.peers.length,pMin,pMax)};
+    x.score=Math.round(WEIGHTS.reduce((a,w)=>a+P.w[w.id]*x.s[w.id],0)/wt*100);
+  });
+  list.sort((a,b)=>b.score-a.score);
+  RANK=list; return list;
+}
+function plan(){
+  P.hc=Math.max(20,Math.min(10000,+$("#p-hc").value||300)); P.t2=$("#p-t2").checked;
+  P.model=(document.querySelector('input[name="opmodel"]:checked')||{}).value||"own";
+  FUNCS.forEach(f=>P.mix[f.id]=+$("#mx-"+f.id).value); WEIGHTS.forEach(w=>P.w[w.id]=+$("#w-"+w.id).value);
+  store.set("planner",P);
+  const mixTot = FUNCS.reduce((a,f)=>a+P.mix[f.id],0)||1;
+  FUNCS.forEach(f=>$("#mo-"+f.id).textContent=Math.round(P.mix[f.id]/mixTot*100)+"%");
+  WEIGHTS.forEach(w=>$("#wo-"+w.id).textContent=P.w[w.id]);
+  $("#modelnote").textContent = MODELS.find(m=>m.id===P.model).note;
+  const list=compute();
+  const metros=list.filter(x=>x.c.tier===1).map(x=>x.perHead); const spread=metros.length?Math.round((Math.max(...metros)/Math.min(...metros)-1)*100):0;
+  $("#psummary").textContent = `${fmt(P.hc)} people, ${allSectors()?"all industries":P.sectors.join(", ")}. Cost per person varies about ${spread}% across metros, so talent and ecosystem usually decide. Board pack compares: ${[...inPackNames(list)].join(", ")}.`;
+  const inPack=new Set(packCities(list).map(x=>x.c.id));
+  $("#rlist").innerHTML = list.map((x,i)=>{
+    const press = x.pressure>0.3?["bad","High"]:x.pressure>0.12?["warn","Moderate"]:["good","Low"];
+    const why=[];
+    if(x.strong.length) why.push(`Established cluster for ${esc(x.strong.length===P.sectors.length&&P.sectors.length>2?"all the industries you picked":x.strong.join(", "))}${x.strong.length<P.sectors.length?` (${x.strong.length} of ${P.sectors.length} picked)`:""}.`);
+    why.push(x.c.gcc?`${fmt(x.c.gcc)} GCC companies${x.c.ncr?" across NCR":""} ${srcChip("S3")}.`:`City GCC count not published; ecosystem scored as small.`);
+    if(x.peers.length) why.push(`In our sample: ${x.peers.slice(0,3).map(g=>`<button class="linkish" style="font-weight:500" data-rec="gcc:${g.id}">${esc(g.name)}</button>`).join(", ")}${x.peers.length>3?` and ${x.peers.length-3} more`:""}.`);
+    why.push(`<button class="linkish" style="font-weight:500" data-rec="policy:${x.c.pol}">${esc(x.pol.name)}</button> ${statusPill(x.pol.status)} ${srcChip(x.pol.src)}`);
+    if(P.model==="eor"&&P.hc>50) why.push(`Employer-of-record fees add ₹${cr(x.fee)} Cr a year at ${fmt(P.hc)} people. Most firms switch to their own entity past about 50.`);
+    if(x.pressure>0.12) why.push(`Your headcount is ${x.pressure.toFixed(2)}% of the estimated local tech pool. Expect slower hiring.`);
+    return `<article class="rcard ${i===0?"top1":""} ${inPack.has(x.c.id)?"inpack":""}">
+      <div class="rank">${i+1}</div>
+      <div class="rname"><h3><button class="linkish" data-rec="city:${x.c.id}">${esc(x.c.name)}</button></h3><span class="tag">${esc(x.c.state)}</span>${x.c.tier===2?'<span class="tag">Tier 2</span>':""}</div>
+      <div class="score">${x.score}<small>fit score</small></div>
+      <div class="rbody">
+        <div class="kv">
+          <div>Annual run-rate<b>₹${cr(x.total)} Cr</b><span>≈ $${usdM(x.total)}M ${tierTag("Estimate")}</span></div>
+          <div>Per employee<b>₹${(x.perHead/1e5).toFixed(1)} L</b><span>≈ $${Math.round(x.perHead/MODEL.fx/1000)}k / yr</span></div>
+          <div>Office rent<b>₹${x.c.rent}/sq ft</b><span>${srcChip(x.c.rentSrc)}</span></div>
+          <div>Hiring pressure<b><span class="pill ${press[0]}">${press[1]}</span></b><span>pool ~${pool(x.c.talentK)} ${tierTag("Estimate")}</span></div>
+          <div>${esc(MODELS.find(m=>m.id===P.model).label)}<b>${x.fee?"+₹"+cr(x.fee)+" Cr fees":x.setup?"₹"+Math.round(x.setup/1e5)+" L one-time setup":"No extra fees"}</b><span>first hires in ${x.start} ${tierTag("Estimate")}</span></div>
+        </div>
+        <div class="comps" style="grid-template-columns:repeat(6,minmax(0,1fr))">${WEIGHTS.map(w=>`<div>${w.label}<div class="bar"><i style="width:${Math.round(x.s[w.id]*100)}%"></i></div></div>`).join("")}</div>
+        <ul class="why">${why.map(w=>`<li>${w}</li>`).join("")}</ul>
+      </div><button type="button" class="chip packbtn" data-ccity="${x.c.id}" aria-pressed="${inPack.has(x.c.id)}">${inPack.has(x.c.id)?"✓ In board pack":"+ Add to board pack"}</button></article>`;
+  }).join("");
+}
+$("#pform").addEventListener("input",plan);
+$("#assumptions").innerHTML = [
+  `Salaries: mid-level Bengaluru CTC of ${FUNCS.map(f=>`${f.label.toLowerCase()} ₹${f.base}L`).join(", ")}, scaled by each city's salary index. These are our estimates, not a published source.`,
+  `Leadership layer: ${MODEL.lead*100}% of headcount at ₹${MODEL.leadLpa}L. All salaries loaded ×${MODEL.loaded} for benefits and statutory costs.`,
+  `Office: ${MODEL.sqftPerSeat} sq ft per seat at the city's market rent plus ₹${MODEL.cam}/sq ft maintenance. Metro rents are CRE Matrix Q1 CY26 market rents ${srcChip("S5")}; tier-2 rents are our estimates. Fit-out shown separately at ₹${fmt(MODEL.fitout)}/sq ft.`,
+  `Operating model: employer of record adds a fee of ₹${fmt(OPMODEL.eor.fee)} per person a month and uses flexible seats at ${OPMODEL.eor.flex}× office cost with no fit-out; build-operate-transfer adds a ${OPMODEL.bot.mgmt*100}% management fee on running cost; own entity adds a one-time setup of ₹${Math.round(OPMODEL.own.setup/1e5)} L. Our estimates from typical quotes.`,
+  `Other running costs (IT, travel, admin): ₹${fmt(MODEL.otherPerHead)} per person per year. Exchange rate ₹${MODEL.fx} per US dollar.`,
+  `Ecosystem uses Vestian's company counts ${srcChip("S3")}. Tier-2 cities have no published count and score low on it; Gurugram and Noida share the NCR figure.`,
+  `Dedicated state policy scores 1 for a dedicated policy, 0.6 for a framework, 0.4 for a draft or employee incentives only, and 0 if not on CBRE's list ${srcChip("S7")}.`,
+  `"Peers in our sample" counts our ${GCCS.length} seed records only, about 2% of India's GCCs, so it is weighted low by default.`
+].map(s=>`<li>${s}</li>`).join("");
+plan();
+$("#topack").onclick=()=>show("room");
+
+/* ============ RECEIPTS ============ */
+function receipts(){
+  const st=store.get("receipts",{added:[],updates:{}});
+  return [...SEED_RECEIPTS,...st.added].map(r=>Object.assign({},r,st.updates[r.id]||{}));
+}
+function saveReceiptUpdate(id,upd){ const st=store.get("receipts",{added:[],updates:{}}); st.updates[id]=Object.assign(st.updates[id]||{},upd); store.set("receipts",st); }
+function addReceipt(r){ const st=store.get("receipts",{added:[],updates:{}}); st.added.push(r); store.set("receipts",st); }
+function receiptCard(r){
+  const lv=["Claimed","Reported","Verified"].indexOf(r.tier);
+  const canConfirm = r.client && r.client!=="Not named" && r.tier!=="Verified" && !r.disputed;
+  return `<div class="receipt" id="rc-${r.id}">
+    <div><b>${esc(r.prov)}</b> <span class="muted">for</span> <b>${esc(r.client)}</b></div>
+    <div class="steps3"><span class="${lv>=0?"on c":""}">Claimed</span><span class="${lv>=1?"on r":""}">Reported</span><span class="${lv>=2?"on v":""}">Verified</span></div>
+    <div class="what">${esc(r.what)}</div>
+    <div class="meta">${r.city?`<span>${esc(cityName(r.city))}</span>`:""}<span>${esc(r.period)}</span>${linkChip(r.url,r.srcLabel)}
+      ${r.confirmedBy?`<span class="tier Verified">Confirmed by ${esc(r.confirmedBy)}${r.confirmNote?" · "+esc(r.confirmNote):""}</span>`:""}
+      ${r.partly?`<span class="tier Claimed">Client confirmed in part: ${esc(r.partly)}</span>`:""}
+      ${r.disputed?`<span class="tier Pending">Disputed by client</span>`:""}
+      ${canConfirm?`<button class="btn sm" data-confirm="${r.id}" type="button">I'm at ${esc(r.client)}: confirm this</button>`:""}</div>
+  </div>`;
+}
+function renderReceipts(){ $("#receipts").innerHTML = receipts().map(receiptCard).join(""); }
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-confirm]"); if(!b) return;
+  const r=receipts().find(x=>x.id===b.dataset.confirm); const host=b.closest(".receipt"); if(!r||!host||host.querySelector(".formcard")) return;
+  host.insertAdjacentHTML("beforeend",`<form class="formcard" data-cf="${r.id}">
+    <b>Confirm a delivery for ${esc(r.client)}</b>
+    <p class="note">We record facts, not opinions. In the product we check that your work email belongs to ${esc(r.client)} before the receipt moves to Verified.</p>
+    <div class="g2">
+      <label class="field" for="cf-name-${r.id}">Your name and role<input id="cf-name-${r.id}" type="text" required placeholder="e.g. Head of India GCC"></label>
+      <label class="field" for="cf-mail-${r.id}">Work email<input id="cf-mail-${r.id}" type="email" required placeholder="name@company.com"></label>
+      <label class="field" for="cf-ok-${r.id}">Is the description accurate?<select id="cf-ok-${r.id}"><option value="yes">Yes, as written</option><option value="partly">Partly</option><option value="no">No</option></select></label>
+      <label class="field" for="cf-hc-${r.id}">Headcount delivered (optional)<input id="cf-hc-${r.id}" type="number" min="0"></label>
+    </div>
+    <label class="field" for="cf-note-${r.id}">What should be corrected? (if partly or no)<input id="cf-note-${r.id}" type="text"></label>
+    <div class="row"><button class="btn primary sm" type="submit">Submit confirmation</button><button class="btn sm" type="button" data-cancel>Cancel</button></div>
+  </form>`);
+});
+document.addEventListener("click",e=>{ const c=e.target.closest("[data-cancel]"); if(c) c.closest("form")?.remove(); });
+document.addEventListener("submit",e=>{
+  const f=e.target.closest("[data-cf]"); if(!f) return; e.preventDefault();
+  const id=f.dataset.cf, v=k=>$(`#cf-${k}-${id}`).value.trim();
+  const ok=v("ok"), who=v("name"), dom=(v("mail").split("@")[1]||"");
+  if(ok==="yes") saveReceiptUpdate(id,{tier:"Verified",confirmedBy:who+(dom?" (@"+dom+")":""),confirmNote:v("hc")?v("hc")+" people":""});
+  else if(ok==="partly") saveReceiptUpdate(id,{partly:v("note")||"details differ"});
+  else saveReceiptUpdate(id,{disputed:true});
+  renderReceipts(); renderV(); if(!$("#v-room").hidden) renderPack();
+});
+$("#newclaim").onclick=()=>{
+  if($("#claimform")) return;
+  $("#receipts").insertAdjacentHTML("afterbegin",`<form class="formcard" id="claimform">
+    <b>Add a delivery claim</b><p class="note">A claim starts as Claimed. It moves up only when a public source or the client confirms it, never because a provider pays.</p>
+    <div class="g2">
+      <label class="field" for="nc-prov">Provider<select id="nc-prov">${PROVIDERS.map(p=>`<option>${esc(p.name)}</option>`).join("")}</select></label>
+      <label class="field" for="nc-client">Client GCC<input id="nc-client" type="text" required></label>
+      <label class="field" for="nc-city">City<select id="nc-city">${CITIES.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></label>
+      <label class="field" for="nc-period">When<input id="nc-period" type="text" placeholder="e.g. Mar–Sep 2025" required></label>
+    </div>
+    <label class="field" for="nc-what">What was delivered<input id="nc-what" type="text" required placeholder="e.g. Entity setup and first 120 hires"></label>
+    <label class="field" for="nc-url">Public evidence link (optional)<input id="nc-url" type="url" placeholder="https://"></label>
+    <div class="row"><button class="btn primary sm" type="submit">Add claim</button><button class="btn sm" type="button" data-cancel>Cancel</button></div>
+  </form>`);
+  $("#claimform").onsubmit=e=>{ e.preventDefault();
+    const u=$("#nc-url").value.trim();
+    addReceipt({id:"u"+Date.now(),prov:$("#nc-prov").value,client:$("#nc-client").value.trim(),what:$("#nc-what").value.trim(),city:$("#nc-city").value,period:$("#nc-period").value.trim(),tier:"Claimed",url:/^https:\/\//.test(u)?u:"",srcLabel:"Provider's claim"});
+    renderReceipts(); renderV();
+  };
+};
+
+/* ============ PROVIDER DIRECTORY ============ */
+$("#v-cat").innerHTML=opt([...new Set(PROVIDERS.map(p=>p.cat))],"Anything");
+$("#v-city").innerHTML=opt(CITIES.map(c=>[c.id,c.name]),"Any city");
+function renderV(){
+  const cat=$("#v-cat").value, c=$("#v-city").value, rs=receipts();
+  const rows=PROVIDERS.filter(p=>(!cat||p.cat===cat)&&(!c||p.cities.includes(c)));
+  $("#vtable").innerHTML=`<thead><tr><th>Firm</th><th>Category</th><th>Receipts</th></tr></thead><tbody>${rows.map(p=>{const mine=rs.filter(r=>r.prov===p.name);const n=t=>mine.filter(r=>r.tier===t).length;
+    return `<tr><td><button class="linkish" data-rec="prov:${p.id}">${esc(p.name)}</button><div class="muted" style="font-size:.8rem">${esc(p.services)}</div></td><td><span class="tag">${esc(p.cat)}</span></td>
+    <td style="white-space:nowrap">${mine.length?["Verified","Reported","Claimed"].filter(t=>n(t)).map(t=>`<span class="tier ${t}">${n(t)} ${t}</span>`).join(" "):'<span class="muted">None yet</span>'}</td></tr>`;}).join("")||`<tr><td colspan="3">No providers match.</td></tr>`}</tbody>`;
+}
+["#v-cat","#v-city"].forEach(s=>$(s).addEventListener("input",renderV));
+renderReceipts(); renderV();
+
+/* ============ SIGNALS ============ */
+$("#s-city").innerHTML=opt([...new Set(SIGNALS.map(s=>s.city))].map(c=>[c,cityName(c)]),"Any city");
+$("#s-sector").innerHTML=opt([...new Set(SIGNALS.map(s=>s.sector))],"Any industry");
+$("#ladderhead").innerHTML=`<div>Company</div>`+LADDER.map(([,l])=>`<div>${l}</div>`).join("");
+// likelihood to become operational within 12 months: logistic over documented ladder steps (judgement-set weights)
+const LIKE={intercept:-2.0,w:{ann:2.0,ent:1.0,space:1.5,lease:1.5,hire:1.0}};
+const isDone=v=>v&&typeof v==="object";
+function likelihood(x){ if(isDone(x.steps.op)) return null; const z=LIKE.intercept+Object.entries(LIKE.w).reduce((a,[k,w])=>a+(isDone(x.steps[k])?w:0),0); return 1/(1+Math.exp(-z)); }
+const WHATIF={};
+function likelihoodW(x,i){ const w=WHATIF[i]; if(!w||!w.size) return likelihood(x); if(w.has("op")||isDone(x.steps.op)) return null; const z=LIKE.intercept+Object.entries(LIKE.w).reduce((a,[k,v])=>a+(isDone(x.steps[k])||w.has(k)?v:0),0); return 1/(1+Math.exp(-z)); }
+function likeBadge(x,i){ if(i!=null&&WHATIF[i]&&WHATIF[i].size){ const a=likelihood(x), p=likelihoodW(x,i); const t=v=>v==null?"Operational":Math.round(v*100)+"%"; return `<span style="display:flex;align-items:center;gap:6px;font-size:.78rem"><span class="muted">What-if</span><b class="num">${t(p)}</b><span class="muted">(now ${t(a)})</span></span><div class="bar" style="max-width:140px;margin-top:0"><i style="width:${p==null?100:Math.round(p*100)}%"></i></div>`; }
+  const p=likelihood(x); if(p==null) return `<span class="pill good" style="align-self:flex-start">Operational</span>`; const pc=Math.round(p*100); return `<span style="display:flex;align-items:center;gap:6px;font-size:.78rem"><span class="muted">Likelihood</span><b class="num">${pc}%</b></span><div class="bar" style="max-width:140px;margin-top:0"><i style="width:${pc}%"></i></div>`; }
+$("#liketable").innerHTML=`<thead><tr><th>Evidence step</th><th>Weight</th></tr></thead><tbody><tr><td>Starting score (intercept)</td><td class="n">${LIKE.intercept.toFixed(1)}</td></tr>${LADDER.filter(([k])=>k!=="op").map(([k,l])=>`<tr><td>${l}</td><td class="n">+${LIKE.w[k].toFixed(1)}</td></tr>`).join("")}<tr><td colspan="2" class="muted" style="font-size:.84rem">Likelihood = 1 ÷ (1 + e<sup>−score</sup>). Announced only: score 0 → 50%. Announced and lease: 1.5 → 82%.</td></tr></tbody>`;
+// GCC count trend: nasscom-lineage company counts, linear projection at two observed paces
+function renderTrend(){
+  const obs=[{fy:2019,v:1300,d:true,src:"S1"},{fy:2024,v:1700,src:"S1"},{fy:2026,v:2117,src:"S2"}];
+  const lo=80, hi=208, mid=(lo+hi)/2, yrs=[2026,2027,2028,2029,2030];
+  const W=640,H=260,L=56,R=96,T=16,B=34, x=fy=>L+(fy-2019)/(2030-2019)*(W-L-R), y=v=>T+(1-(v-1000)/(3200-1000))*(H-T-B);
+  const band=yrs.map(f=>[x(f),y(2117+hi*(f-2026))]).concat(yrs.slice().reverse().map(f=>[x(f),y(2117+lo*(f-2026))]));
+  const grid=[1000,1500,2000,2500,3000].map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line-soft)"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${fmt(v)}</text>`).join("");
+  const xt=[2019,2022,2024,2026,2028,2030].map(f=>`<text x="${x(f)}" y="${H-12}" text-anchor="middle" font-size="11" fill="var(--muted)">FY${String(f).slice(2)}</text>`).join("");
+  const end=(v,lab)=>`<text x="${x(2030)+6}" y="${y(v)+4}" font-size="11" fill="var(--muted)">${lab} ${fmt(v)}</text>`;
+  $("#trend").innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px;min-width:420px;display:block" role="img" aria-label="GCC count rose from about 1,300 in FY19 to 1,700 in FY24 and 2,117 in FY26; projected 2,437 to 2,949 by FY30">${grid}${xt}
+    <polygon points="${band.map(p=>p.join(",")).join(" ")}" fill="var(--accent-soft)" stroke="none"/>
+    <polyline points="${obs.map(o=>x(o.fy)+","+y(o.v)).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+    <line x1="${x(2026)}" y1="${y(2117)}" x2="${x(2030)}" y2="${y(2117+mid*4)}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 4"/>
+    ${obs.map(o=>`<circle cx="${x(o.fy)}" cy="${y(o.v)}" r="4.5" fill="${o.d?"var(--surface)":"var(--accent)"}" stroke="var(--accent)" stroke-width="2"/><text x="${x(o.fy)+(o.d?8:0)}" y="${y(o.v)-10}" text-anchor="${o.d?"start":"middle"}" font-size="11.5" fill="var(--ink)" font-weight="600">${fmt(o.v)}${o.d?"*":""}</text>`).join("")}
+    <rect x="${x(2030)-4}" y="${y(2400)-4}" width="8" height="8" transform="rotate(45 ${x(2030)} ${y(2400)})" fill="var(--mark)"/>
+    ${end(2117+hi*4,"high")}${end(Math.round(2117+mid*4),"mid")}${end(2117+lo*4,"low")}
+  </svg>`;
+  $("#trendnote").innerHTML=`GCC companies in India. Solid points: FY24 ${srcChip("S1")} and FY26 ${srcChip("S2")}. *FY19 is derived: 1,700 minus the "400+ new GCCs in five years" in the same government note. Net additions were about ${lo} a year in FY19–24 and ${hi} a year in FY24–26; the shaded band projects each pace to FY30, the dashed line the midpoint. The orange marker is the government's "~2,400 centres by 2030" ${srcChip("S1")}, near the low end. The FY24–26 jump may partly reflect wider counting, so read this as a range, not a forecast.`;
+}
+renderTrend();
+function renderSignals(){
+  const c=$("#s-city").value, s=$("#s-sector").value, sort=$("#s-sort").value, real=$("#s-real").checked;
+  const rows=SIGNALS.map((x,i)=>({x,i})).filter(({x})=>(!c||x.city===c)&&(!s||x.sector===s)&&(!real||!x.sample));
+  const L=({x,i})=>{const p=likelihoodW(x,i); return p==null?2:p;};
+  if(sort==="like") rows.sort((a,b)=>L(b)-L(a)); else if(sort==="least") rows.sort((a,b)=>L(a)-L(b)); else rows.sort((a,b)=>a.x.name.localeCompare(b.x.name));
+  const open=rows.filter(r=>likelihood(r.x)==null).length, pend=rows.filter(r=>likelihood(r.x)!=null);
+  $("#sigsum").innerHTML=`<b>${rows.length}</b> shown: <b>${open}</b> operational, <b>${pend.length}</b> still coming${pend.length?`, average likelihood <b>${Math.round(pend.reduce((a,r)=>a+likelihood(r.x),0)/pend.length*100)}%</b>`:""}.`;
+  $("#sigreset").hidden=!Object.values(WHATIF).some(w=>w.size);
+  $("#signals").innerHTML=rows.map(({x,i})=>`<div class="sig">
+    <div class="who"><b>${esc(x.name)}</b>${x.sample?'<span class="sample-tag">Illustrative, not real</span>':""}<span class="muted">${esc(cityName(x.city))} · ${esc(x.sector)}</span>${likeBadge(x,i)}</div>
+    ${LADDER.map(([k,lab])=>{const v=x.steps[k]; if(v&&typeof v==="object") return `<div class="step done"><b>${esc(v.d)}</b><span>${esc(v.t)}</span>${v.url?`<a href="${esc(v.url)}" target="_blank" rel="noopener" style="font-size:.7rem">source ↗</a>`:""}</div>`;
+      const on=WHATIF[i]&&WHATIF[i].has(k);
+      if(isDone(x.steps.op)) return `<div class="step ${v==="unk"?"unk":"no"}">${v==="unk"?"Not checked":"Not yet"}</div>`;
+      return `<button type="button" class="step ${on?"wif":v==="unk"?"unk":"no"}" data-wif="${i}:${k}" aria-pressed="${!!on}" title="What if: ${esc(lab)}">${on?"What-if: assumed done":v==="unk"?"Not checked":"Not yet"}</button>`;}).join("")}
+  </div>`).join("")||`<p class="muted">No signals match.</p>`;
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-wif]"); if(!b) return; const [i,k]=b.dataset.wif.split(":"); (WHATIF[i]=WHATIF[i]||new Set()); WHATIF[i].has(k)?WHATIF[i].delete(k):WHATIF[i].add(k); renderSignals(); });
+$("#sigreset").onclick=()=>{ Object.keys(WHATIF).forEach(k=>delete WHATIF[k]); renderSignals(); };
+["#s-city","#s-sector","#s-sort","#s-real"].forEach(s=>$(s).addEventListener("input",renderSignals));
+renderSignals();
+
+/* ============ CITIES & POLICIES ============ */
+let picked = store.get("picked", ["blr","hyd","pun"]);
+function renderPick(){
+  $("#cpick").innerHTML = CITIES.map(c=>`<button class="chip" aria-pressed="${picked.includes(c.id)}" data-pick="${c.id}">${esc(c.name)}</button>`).join("");
+  $("#cpick").querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ const id=b.dataset.pick;
+    if(picked.includes(id)) picked=picked.filter(x=>x!==id); else { picked.push(id); if(picked.length>3) picked.shift(); }
+    store.set("picked",picked); renderPick(); renderCmp(); });
+}
+function renderCmp(){
+  const cs=picked.map(id=>cityById[id]).filter(Boolean);
+  if(!cs.length){ $("#cmp").innerHTML=`<tbody><tr><td>Pick a city above to compare.</td></tr></tbody>`; return; }
+  const best=(vals,low)=>{const v=vals.filter(x=>x!=null);const t=low?Math.min(...v):Math.max(...v);return vals.map(x=>cs.length>1&&x===t)};
+  const rows=[
+    ["GCC companies",c=>c.gcc,false,c=>c.gcc?`${fmt(c.gcc)}${c.ncr?" (NCR)":""} ${srcChip("S3")}`:`Not published`],
+    ["Office rent, ₹/sq ft/mo",c=>c.rent,true,c=>`${c.rent} ${srcChip(c.rentSrc)}`],
+    ["Salary index",c=>c.salIdx,true,c=>`${c.salIdx.toFixed(2)} ${tierTag("Estimate")}`],
+    ["Tech talent pool",c=>c.talentK,false,c=>`~${pool(c.talentK)} ${tierTag("Estimate")}`],
+    ["International flights",c=>c.conn,false,c=>`${c.conn}/5`]
+  ];
+  let h=`<thead><tr><th></th>${cs.map(c=>`<th><button class="linkish" data-rec="city:${c.id}">${esc(c.name)}</button></th>`).join("")}</tr></thead><tbody>`;
+  rows.forEach(([lab,get,low,sh])=>{const b=best(cs.map(get),low); h+=`<tr><td>${lab}</td>${cs.map((c,i)=>`<td class="n ${b[i]?"best":""}">${sh(c)}</td>`).join("")}</tr>`;});
+  h+=`<tr><td>State policy</td>${cs.map(c=>{const p=POLICIES[c.pol];return `<td><button class="linkish" style="font-weight:500" data-rec="policy:${c.pol}">${esc(p.name)}</button><div style="margin-top:4px">${statusPill(p.status)}</div></td>`;}).join("")}</tr>`;
+  h+=`<tr><td>Key incentives</td>${cs.map(c=>`<td style="font-size:.84rem"><ul style="margin:0;padding-left:16px">${POLICIES[c.pol].facts.slice(0,3).map(f=>`<li>${esc(f)}</li>`).join("")}</ul></td>`).join("")}</tr>`;
+  h+=`<tr><td>Office clusters</td>${cs.map(c=>`<td>${c.clusters.map(esc).join(", ")}</td>`).join("")}</tr></tbody>`;
+  $("#cmp").innerHTML=h;
+}
+$("#polhead").innerHTML=`CBRE lists 8 states with dedicated policies and 2 with frameworks ${srcChip("S7")}`;
+$("#ptable").innerHTML=`<thead><tr><th>State</th><th>Status</th><th>Policy and dates</th><th>Target</th><th>Key incentives</th><th>Sources</th></tr></thead><tbody>${Object.entries(POLICIES).map(([k,p])=>`<tr>
+  <td>${esc(p.state)}</td><td>${statusPill(p.status)}</td><td style="min-width:200px"><button class="linkish" data-rec="policy:${k}">${esc(p.name)}</button><div class="muted" style="font-size:.8rem">${esc(p.date)}</div></td>
+  <td style="min-width:160px;font-size:.86rem">${esc(p.target||"—")}</td><td style="min-width:300px;font-size:.84rem"><ul style="margin:0;padding-left:16px">${p.facts.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></td><td style="white-space:nowrap">${polSources(p)}</td></tr>`).join("")}</tbody>`;
+renderPick(); renderCmp();
+
+/* ============ GCC DIRECTORY ============ */
+$("#g-sector").innerHTML=opt(SECTORS,"Any industry");
+$("#g-city").innerHTML=opt(CITIES.map(c=>[c.id,c.name]),"Any city");
+function renderG(){
+  const q=$("#g-q").value.trim().toLowerCase(), s=$("#g-sector").value, c=$("#g-city").value, st=$("#g-status").value, sr=$("#g-src").value;
+  const rows=GCCS.filter(g=>(!q||(g.name+" "+g.hq).toLowerCase().includes(q))&&(!s||g.sector===s)&&(!c||g.cities.includes(c))&&(!st||g.status===st)&&(!sr||(sr==="recent"?g.date>="2025":sr==="older"?(g.date&&g.date<"2025"):!g.date)));
+  const linked=GCCS.filter(g=>g.url).length;
+  $("#gcount").textContent=`${rows.length} of ${GCCS.length} records shown. ${linked===GCCS.length?"Every record has a linked source.":linked+" have a linked source; "+(GCCS.length-linked)+" are still waiting for one."} India has 2,117 GCCs (FY26).`;
+  $("#gtable").innerHTML=`<thead><tr><th>Company</th><th>Parent HQ</th><th>Industry</th><th>Cities</th><th>Headcount</th><th>Status</th><th>Source</th></tr></thead><tbody>${rows.map(g=>`<tr>
+    <td><button class="linkish" data-rec="gcc:${g.id}">${esc(g.name)}</button></td><td>${esc(g.hq)}</td><td>${esc(g.sector)}</td>
+    <td>${g.cities.map(id=>`<span class="tag">${esc(cityName(id))}</span>`).join(" ")}</td><td style="font-size:.86rem">${esc(g.band)}</td>
+    <td>${g.status==="Operating"?'<span class="pill good">Operating</span>':g.status==="Ramping"?'<span class="pill warn">Ramping</span>':'<span class="pill bad">Announced</span>'}</td><td style="white-space:nowrap">${linkChip(g.url,g.srcLabel+(g.date?" "+g.date:""))}</td></tr>`).join("")||`<tr><td colspan="7">No GCCs match.</td></tr>`}</tbody>`;
+}
+["#g-q","#g-sector","#g-city","#g-status","#g-src"].forEach(s=>$(s).addEventListener("input",renderG));
+renderG();
+
+/* ============ DECISION ROOM ============ */
+const room = Object.assign({date:"2026-01-15",guests:[{name:"Priya (Khaitan & Co)",role:"Lawyer"}],comments:{incent:[{who:"Priya (Khaitan & Co)",text:"Check whether the rent support stacks with SEZ benefits before the board meeting."}]}}, store.get("room",{}));
+$("#packdate").value = room.date;
+const saveRoom=()=>store.set("room",room);
+const today=()=>new Date().toISOString().slice(0,10);
+let packRecs=new Set();
+function fig(text,rec,src){
+  packRecs.add(rec);
+  const ch=CHANGES.filter(c=>(c.rec===rec || (rec.startsWith("rent:")&&c.rec==="rent")) && c.date>room.date);
+  return `<span class="fig ${ch.length?"stale":""}" ${ch.length?`title="Source changed on ${ch.map(c=>c.date).join(", ")}"`:""}>${text}</span> ${src?srcChip(src):""}`;
+}
+function commentsFor(key){
+  const list=room.comments[key]||[];
+  const authors=["You",...room.guests.map(g=>g.name)];
+  return `<div class="comments">${list.map(c=>`<div class="comment"><b>${esc(c.who)}:</b> ${esc(c.text)}</div>`).join("")}
+    <form class="addc" data-ck="${key}"><select aria-label="Comment as">${authors.map(a=>`<option>${esc(a)}</option>`).join("")}</select><input type="text" placeholder="Comment on this section" aria-label="Comment" required><button class="btn sm" type="submit">Add</button></form></div>`;
+}
+function inPackNames(list){ return packCities(list).map(x=>x.c.name); }
+function afterCmp(){ plan(); if(!$("#v-room").hidden) renderPack(); }
+function packCities(list){
+  if(CMP.mode==="pick"){ const s=list.filter(x=>CMP.ids.includes(x.c.id)); if(s.length) return s; }
+  return CMP.mode==="all"?list:list.slice(0,CMP.n||2);
+}
+function renderCmpCtl(list){
+  const modes=[["top",2,"Top 2"],["top",3,"Top 3"],["top",5,"Top 5"],["all",0,"All"]];
+  $("#cmpmode").innerHTML=modes.map(([m,n,l])=>`<button type="button" class="chip" data-cmode="${m}" data-cn="${n}" aria-pressed="${CMP.mode===m&&(m==="all"||CMP.n===n)}">${l}</button>`).join("");
+  const on=new Set(packCities(list).map(x=>x.c.id));
+  $("#cmpcities").innerHTML=list.map(x=>`<button type="button" class="chip" data-ccity="${x.c.id}" aria-pressed="${on.has(x.c.id)}">${esc(x.c.name)}</button>`).join("");
+}
+document.addEventListener("click",e=>{
+  const m=e.target.closest("[data-cmode]"); if(m){ Object.assign(CMP,{mode:m.dataset.cmode,n:+m.dataset.cn,ids:[]}); saveCmp(); afterCmp(); return; }
+  const c=e.target.closest("[data-ccity]"); if(c){ const cur=packCities(compute()).map(x=>x.c.id); const id=c.dataset.ccity;
+    let ids=cur.includes(id)?cur.filter(x=>x!==id):cur.concat(id); if(!ids.length) return; Object.assign(CMP,{mode:"pick",n:0,ids}); saveCmp(); afterCmp(); }
+});
+function renderPack(){
+  packRecs=new Set();
+  const list=compute(); const sel=packCities(list); const a=sel[0], b=sel[1]; if(!a) return;
+  renderCmpCtl(list);
+  const model=MODELS.find(m=>m.id===P.model);
+  const provs=cats=>cats.map(cat=>{const ps=PROVIDERS.filter(p=>p.cat===cat&&p.cities.includes(a.c.id)); const rs=receipts();
+    ps.sort((x,y)=>rs.filter(r=>r.prov===y.name).length-rs.filter(r=>r.prov===x.name).length);
+    return `<li><b>${esc(cat)}:</b> ${ps.slice(0,3).map(p=>{const best=rs.filter(r=>r.prov===p.name).map(r=>r.tier).sort((u,v)=>["Verified","Reported","Claimed"].indexOf(u)-["Verified","Reported","Claimed"].indexOf(v))[0];return `<button class="linkish" style="font-weight:500" data-rec="prov:${p.id}">${esc(p.name)}</button>${best?" "+tierTag(best):""}`;}).join(", ")||"none in this city yet"}</li>`;}).join("");
+  const cats = P.model==="eor"?["Employer of record & payroll","Legal","Flexible workspace"]:P.model==="bot"?["Build-operate-transfer & setup","Legal","Real estate & workplace"]:["Setup advisory, tax & accounting","Legal","Real estate & workplace","Hiring & staffing"];
+  const pol=x=>`<li><b>${esc(x.c.state)}:</b> ${fig(esc(x.pol.name)+" ("+esc(x.pol.status.toLowerCase())+")","policy:"+x.c.pol,x.pol.src)}<ul>${x.pol.facts.slice(0,3).map(f=>`<li>${esc(f)}</li>`).join("")}</ul></li>`;
+  const html=`<header><span class="eyebrow">Board pack · prepared ${esc(room.date)}</span><h2>India GCC: ${fmt(P.hc)}-person ${esc(sectorLabel())} centre</h2>${P.sectors.length>2&&!allSectors()?`<p class="muted">Industries: ${esc(P.sectors.join(", "))}</p>`:""}<p class="muted">Built from the entry planner. Every figure links to its source.</p><div id="stalebox"></div></header>
+    <section><h3><span class="sn">1</span>Recommendation</h3><p>Set up in <b>${esc(a.c.name)}</b> (fit score ${a.score})${b?sel.length===2?`, with <b>${esc(b.c.name)}</b> (${b.score}) as the alternative`:`. Compared with ${sel.slice(1).map(x=>`<b>${esc(x.c.name)}</b> (${x.score})`).join(", ")}`:""}. Operating model: <b>${esc(model.label)}</b>.</p>${commentsFor("rec")}</section>
+    <section><h3><span class="sn">2</span>Market context</h3><p>India has ${fig("2,117 GCCs","count","S2")} (FY26). Government figures still quote ${fig("1,700+","count1","S1")} for FY24. ${a.c.name} hosts ${a.c.gcc?fig(fmt(a.c.gcc)+" GCC companies"+(a.c.ncr?" across NCR":""),"eco:"+a.c.id,"S3"):"an unpublished number of GCCs"}.</p>${commentsFor("market")}</section>
+    <section><h3><span class="sn">3</span>Cost</h3><div class="tablewrap"><table><thead><tr><th></th>${sel.map(x=>`<th>${esc(x.c.name)}</th>`).join("")}</tr></thead><tbody>
+      <tr><td>Fit score</td>${sel.map(x=>`<td class="n">${x.score}</td>`).join("")}</tr>
+      <tr><td>Annual run-rate</td>${sel.map(x=>`<td class="n">₹${cr(x.total)} Cr ($${usdM(x.total)}M)</td>`).join("")}</tr>
+      <tr><td>Per employee</td>${sel.map(x=>`<td class="n">₹${(x.perHead/1e5).toFixed(1)} L</td>`).join("")}</tr>
+      <tr><td>Office rent, ₹/sq ft/mo</td>${sel.map(x=>`<td class="n">${fig(String(x.c.rent),"rent:"+x.c.id,x.c.rentSrc)}</td>`).join("")}</tr>
+      <tr><td>One-time fit-out</td>${sel.map(x=>`<td class="n">${x.fit?"₹"+cr(x.fit)+" Cr":"None (flexible seats)"}</td>`).join("")}</tr>
+      <tr><td>${esc(model.label)} fees, in run-rate</td>${sel.map(x=>`<td class="n">${x.fee?"₹"+cr(x.fee)+" Cr":"—"}</td>`).join("")}</tr>
+      <tr><td>One-time entity setup</td>${sel.map(x=>`<td class="n">${x.setup?"₹"+Math.round(x.setup/1e5)+" L":"—"}</td>`).join("")}</tr>
+      <tr><td>Time to first hires</td>${sel.map(x=>`<td class="n">${esc(x.start)}</td>`).join("")}</tr>
+      <tr><td>Peers in your industries</td>${sel.map(x=>`<td class="n">${x.peers.length}</td>`).join("")}</tr></tbody></table></div>
+      <p class="note">Salaries and talent pools are our estimates ${tierTag("Estimate")}; validate them with a recruiter before approval.</p>${commentsFor("cost")}</section>
+    <section><h3><span class="sn">4</span>State incentives</h3><ul>${sel.filter((x,i)=>sel.findIndex(y=>y.c.pol===x.c.pol)===i).map(pol).join("")}</ul>${commentsFor("incent")}</section>
+    <section><h3><span class="sn">5</span>Providers to shortlist in ${esc(a.c.name)}</h3><ul>${provs(cats)}</ul><p class="note">Ordered by delivery evidence. No provider pays for placement, and we take no referral fees.</p>${commentsFor("prov")}</section>
+    <section><h3><span class="sn">6</span>Open questions before approval</h3><ul>
+      <li>Confirm incentive rates and eligibility against the notified text of the ${esc(a.pol.name)}.</li>
+      ${sel.filter(x=>x.pressure>0.12).map(x=>`<li>Headcount is ${x.pressure.toFixed(2)}% of ${esc(x.c.name)}'s estimated tech pool: test time-to-hire with two recruiters.</li>`).join("")}
+      <li>Ask for reference calls with a confirmed past client of each shortlisted ${P.model==="bot"?"build-operate-transfer partner":"provider"}.</li></ul>${commentsFor("open")}</section>`;
+  $("#pack").innerHTML=html;
+  const stale=CHANGES.filter(c=>c.date>room.date && ([...packRecs].some(r=>r===c.rec||(c.rec==="rent"&&r.startsWith("rent:")))));
+  $("#stalebox").innerHTML = stale.length?`<div class="stalebox"><b>${stale.length} figure${stale.length>1?"s":""} changed since this pack was prepared</b><ul>${stale.map(c=>`<li>${esc(c.what)} (${c.date}): ${esc(c.before)} → ${esc(c.after)} ${srcChip(c.src)}</li>`).join("")}</ul><span>Highlighted figures below show the current value. Re-check them before the board reads this.</span></div>`:`<div class="stalebox ok"><b>No source behind this pack has changed since ${esc(room.date)}.</b></div>`;
+  $("#guests").innerHTML = room.guests.map((g,i)=>`<div class="guest"><span class="av">${esc(g.name.slice(0,1).toUpperCase())}</span><span><b>${esc(g.name)}</b> · ${esc(g.role)}</span><button class="btn sm" style="margin-left:auto" data-unguest="${i}" type="button" aria-label="Remove ${esc(g.name)}">Remove</button></div>`).join("")||`<p class="muted">No advisors invited yet.</p>`;
+}
+$("#packdate").addEventListener("input",()=>{ room.date=$("#packdate").value||today(); saveRoom(); renderPack(); });
+$("#packtoday").onclick=()=>{ room.date=today(); $("#packdate").value=room.date; saveRoom(); renderPack(); };
+$("#guestform").onsubmit=e=>{ e.preventDefault(); const n=$("#g-name").value.trim(); if(!n) return; room.guests.push({name:n,role:$("#g-role").value}); $("#g-name").value=""; saveRoom(); renderPack(); };
+document.addEventListener("click",e=>{ const u=e.target.closest("[data-unguest]"); if(u){ room.guests.splice(+u.dataset.unguest,1); saveRoom(); renderPack(); } });
+document.addEventListener("submit",e=>{ const f=e.target.closest("[data-ck]"); if(!f) return; e.preventDefault();
+  const k=f.dataset.ck, who=f.querySelector("select").value, t=f.querySelector("input").value.trim(); if(!t) return;
+  (room.comments[k]=room.comments[k]||[]).push({who,text:t}); saveRoom(); renderPack(); });
+$("#copypack").onclick=async()=>{
+  const t=$("#pack").innerText; const done=m=>{$("#copytoast").textContent=m; setTimeout(()=>$("#copytoast").textContent="",2500);};
+  try{ await navigator.clipboard.writeText(t); done("Copied"); }catch(e){ const r=document.createRange(); r.selectNodeContents($("#pack")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected. Press Ctrl+C or ⌘C to copy."); }
+};
+
+/* ============ ASK ============ */
+const SUGGEST=["What's the best city for a 200-person fintech GCC, and why?","Which states publish actual incentive rates, and what are they?","How many GCCs does India really have?","Which providers have delivery evidence, and at what level?","Which new GCCs are arriving in Hyderabad?","Compare Haryana and Uttar Pradesh for an NCR centre."];
+$("#suggest").insertAdjacentHTML("beforeend", SUGGEST.map(s=>`<button type="button">${esc(s)}</button>`).join(""));
+$("#suggest").querySelectorAll("button").forEach(b=>b.onclick=()=>ask(b.textContent));
+function datasetText(){
+  return JSON.stringify({
+    count_claims:COUNT_CLAIMS, conflicts:CONFLICTS, changes_log:CHANGES,
+    cbre_aug_2026:"8 states with dedicated GCC policies (KA, MH, HR, UP, GJ, RJ, MP, AP) and frameworks in Telangana and Delhi; ~1,380 new GCCs and 1.18M jobs targeted by 2031; GCCs ~43% of office leasing [src:S7]",
+    cities:CITIES.map(c=>({id:c.id,name:c.name,state:c.state,policy:c.pol,gcc_companies:c.gcc??"not published",gcc_count_is_ncr_total:!!c.ncr,rent_inr_sqft_month:c.rent,rent_source:c.rentSrc,talent_pool_thousands_estimate:c.talentK,salary_index_estimate:c.salIdx,strong_sectors:c.strengths,note:c.note})),
+    policies:POLICIES,
+    gccs:GCCS.map(g=>({id:g.id,name:g.name,hq:g.hq,sector:g.sector,cities:g.cities,headcount:g.band,status:g.status,source:g.url?g.srcLabel+" "+g.date:"pending"})),
+    providers:PROVIDERS.map(p=>({id:p.id,name:p.name,category:p.cat,cities:p.cities.length>=12?"pan-India":p.cities,services:p.services})),
+    receipts:receipts().map(r=>({provider:r.prov,client:r.client,what:r.what,tier:r.tier,period:r.period})),
+    signals:SIGNALS.map(s=>({name:s.name,illustrative:!!s.sample,city:s.city,sector:s.sector,steps:s.steps})),
+    cost_model:{salary_base_lpa_bengaluru:Object.fromEntries(FUNCS.map(f=>[f.label,f.base])),...MODEL,operating_models:OPMODEL,industry_function_mix:SECTOR_MIX},
+    neutrality:"Free for entrants; no referral fees or paid introductions; providers may pay a flat fee to host evidence but verification is never tied to payment",
+    sources:Object.fromEntries(Object.entries(SOURCES).map(([k,s])=>[k,s.pub+", "+s.date+" ("+s.tier+")"]))
+  });
+}
+const RULES=()=>`You are the analyst inside GCC Ledger, a sourced database of India's Global Capability Centre (GCC) ecosystem, built for the company entering India.
+
+Rules:
+- Use ONLY the dataset below. If it lacks the answer, say so plainly and say what to verify and with whom.
+- Cite every factual claim inline with tags exactly like [city:blr], [policy:KA], [gcc:g08], [prov:p14], [src:S5]. Use ids from the dataset only.
+- Name the evidence level when it matters: Verified, Reported, Claimed or Estimate. Say when sources disagree or a figure changed (changes_log).
+- Never call an illustrative signal a real company.
+- Recommendation first, then reasons. Under 220 words. Short paragraphs and "- " bullets; **bold** allowed. No tables.
+
+Dataset (JSON):
+${datasetText()}`;
+let turns=[], sampleFn=null, ctl=null, busy=false;
+const chat=$("#chat");
+function renderMd(t){
+  let h=esc(t);
+  h=h.replace(/\[(city|gcc|prov|policy|src):([A-Za-z0-9_-]+)\]/g,(m,ty,id)=>{
+    const label=ty==="city"?(cityById[id]?.name||id):ty==="gcc"?(GCCS.find(g=>g.id===id)?.name||id):ty==="prov"?(PROVIDERS.find(p=>p.id===id)?.name||id):ty==="policy"?((POLICIES[id]?.state||id)+" policy"):(SOURCES[id]?.pub.split(/[ ,(]/)[0]||id);
+    return ty==="src"?`<button class="cite" data-src="${id}">${esc(label)}</button>`:`<button class="cite" data-rec="${ty}:${id}">${esc(label)}</button>`;
+  });
+  h=h.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  const out=[]; let list=null;
+  for(const line of h.split("\n")){
+    const li=line.match(/^\s*(?:[-*•]|\d+\.)\s+(.*)$/);
+    if(li){ (list=list||[]).push(li[1]); continue; }
+    if(list){ out.push("<ul>"+list.map(x=>`<li>${x}</li>`).join("")+"</ul>"); list=null; }
+    if(/^#{1,4}\s+/.test(line)) out.push(`<h4>${line.replace(/^#{1,4}\s+/,"")}</h4>`); else if(line.trim()) out.push(`<p>${line}</p>`);
+  }
+  if(list) out.push("<ul>"+list.map(x=>`<li>${x}</li>`).join("")+"</ul>");
+  return out.join("");
+}
+const EXAMPLES=[
+ {q:"What's the best city for a 200-person fintech GCC, and why?",a:`**Bengaluru** is the strongest fit on the default priorities (fit score 83), with **Hyderabad** (63) as the alternative [city:blr] [city:hyd].
+- **Talent and ecosystem decide, not cost.** Bengaluru has 487 GCC companies [src:S3] and the largest tech pool in the ledger (an Estimate). Annual run-rate is about ₹57 Cr ($6.5M) in Bengaluru vs ₹53 Cr ($6.0M) in Hyderabad, roughly 7% apart.
+- **Peers:** BFSI GCCs in our sample there include [gcc:g18], [gcc:g19] and [gcc:g24].
+- **Policy:** Karnataka has a dedicated GCC policy [policy:KA]; Telangana is still drafting a new one [policy:TG].
+- **Rent:** ₹132.6 vs ₹76.8 per sq ft a month [src:S5].
+Pick Hyderabad if lower rent and newer US BFSI peers such as [gcc:g01] and [gcc:g04] matter more. Salary and talent figures are Estimates, so check them with a recruiter.`},
+ {q:"How many GCCs does India really have?",a:`About **2,117 GCC companies** running **3,728 centres**, as of March 2026 [src:S2].
+- The older **1,700+** is an FY24 figure that government still quotes [src:S1]. Vestian's ~1,700 is from July 2025 [src:S3].
+- City figures differ for the same reason: Bengaluru has 487 companies [src:S3] but 880+ centres [src:S10].
+- The "2,000+" heard in speeches has no stated definition, so the ledger does not cite it.`},
+ {q:"Which states publish actual incentive rates, and what are they?",a:`**Gujarat, Rajasthan and Haryana** publish the most specific rates in the summaries we link.
+- **Gujarat** [policy:GJ]: capex 20–30% up to ₹50 Cr (₹200 Cr for mega projects), opex 15%, and a one-time 50% of CTC per new hire up to ₹60k (women) or ₹50k (men). Operational guidelines came out on 3 Oct 2026 [src:PGJ2].
+- **Rajasthan** [policy:RJ]: 30% salary reimbursement for 3 years (up to ₹1.25 L per employee) and rent support of 50% then 25%, for the first 10 GCCs in each size band.
+- **Uttar Pradesh** [policy:UP]: land subsidy of 30–50%, full stamp duty exemption and a 5% interest subsidy.
+- **Haryana** [policy:HR]: capex reimbursement of 50–75% by location, opex of 50–65% for 5–9 years (capped at ₹15 Cr a year), and up to ₹1 L per employee [src:PHR2].
+- **Maharashtra** [policy:MH] and **Karnataka** [policy:KA] publish incentive types, but our sources give few rates. Check the notified text.`},
+ {q:"Which providers have delivery evidence, and at what level?",a:`Three receipts are **Reported** and none is **Verified** yet.
+- [prov:p01] partnered with Arch Capital on its GCCs in Pune and Thiruvananthapuram (350+ staff planned) [gcc:g06]. The source does not say what ANSR did.
+- [prov:p11] was Arch's legal advisor on the same centres [gcc:g06].
+- [prov:p02] partnered on Nestlé's Hyderabad GCC, but its role is not disclosed [gcc:g11].
+- [prov:p08] and [prov:p01] also make **Claimed** statements (220+ GCCs set up; an analyst ranking) that name no clients.
+A receipt becomes Verified only when the client GCC confirms it.`}
+];
+function showExample(ex){ addMsg("user",esc(ex.q)); addMsg("bot",`<span class="tier Estimate">Pre-computed example</span>`+renderMd(ex.a)); }
+/* ============ OFFLINE ANALYST: answers typed questions from the ledger when Claude isn't available ============ */
+const SECTOR_WORDS=[[/fintech|bank|insur|bfsi|financ|payment|wealth|asset manag/,"BFSI"],[/software|saas|tech(?!nical)|internet|cloud|\bit\b/,"Technology"],[/retail|cpg|consumer|fmcg|e-?commerce/,"Retail & CPG"],[/pharma|health|life ?sci|medtech|biotech|hospital/,"Life sciences & healthcare"],[/auto|car |vehicle|engineering/,"Auto & engineering"],[/semicon|chip/,"Semiconductors"],[/aero|aviation|industrial|defen[cs]e/,"Aerospace & industrial"],[/energy|oil|gas|power/,"Energy"],[/telecom|network/,"Telecom"],[/travel|airline|logistic|transport/,"Travel & transport"],[/consult|professional|legal services|accounting firm/,"Professional services"]];
+const CITY_WORDS={blr:/bengaluru|bangalore|blr/,hyd:/hyderabad/,pun:/pune/,chn:/chennai/,ggn:/gurugram|gurgaon/,noi:/noida/,mum:/mumbai|bombay/,amd:/ahmedabad|gift city|gujarat city/,jai:/jaipur/,vsk:/visakhapatnam|vizag/,idr:/indore/,koc:/kochi|cochin/,cbe:/coimbatore/,kol:/kolkata|calcutta/};
+function detect(q){
+  const s=q.toLowerCase();
+  const sectors=SECTOR_WORDS.filter(([r])=>r.test(s)).map(([,v])=>v);
+  let cities=Object.entries(CITY_WORDS).filter(([,r])=>r.test(s)).map(([k])=>k);
+  if(/\bncr\b|delhi/.test(s)) cities=[...new Set([...cities,"ggn","noi"])];
+  const states=Object.entries(POLICIES).filter(([k,p])=>s.includes(p.state.toLowerCase())).map(([k])=>k);
+  const m=s.match(/(\d[\d,]*)\s*-?\s*(?:person|people|seat|staff|employee|member|head|fte|engineer)/); const hc=m?Math.max(20,Math.min(10000,+m[1].replace(/,/g,""))):null;
+  const gccs=GCCS.filter(g=>{const n=g.name.toLowerCase().split(/[ (]/)[0]; return n.length>=4&&new RegExp("\\b"+n.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").test(s);});
+  return {s,sectors,cities,states,hc,gccs};
+}
+function withPlan(over,fn){ const keep={sectors:P.sectors,hc:P.hc,mix:{...P.mix},t2:P.t2}; Object.assign(P,over); if(over.sectors) applySectorMix(); const r=fn(compute()); Object.assign(P,keep); FUNCS.forEach(f=>{const el=document.getElementById("mx-"+f.id); if(el) el.value=P.mix[f.id];}); compute(); return r; }
+const cityLine=x=>`[city:${x.c.id}]: fit score **${x.score}**, about ₹${cr(x.total)} Cr a year ($${usdM(x.total)}M, Estimate), rent ₹${x.c.rent}/sq ft [src:${x.c.rentSrc}], ${x.c.gcc?fmt(x.c.gcc)+" GCC companies"+(x.c.ncr?" across NCR":"")+" [src:S3]":"no published GCC count"}, ${x.pol.status.toLowerCase()} state policy [policy:${x.c.pol}]`;
+function localAnswer(q){
+  const d=detect(q), s=d.s, out=[];
+  const plan=()=>withPlan({...(d.sectors.length?{sectors:d.sectors}:{}),...(d.hc?{hc:d.hc}:{})},l=>l.map(x=>({...x})));
+  const ctx=()=>`${fmt(d.hc||P.hc)} people, ${(d.sectors.length?d.sectors:P.sectors).join(", ")}, ${MODELS.find(m=>m.id===P.model).label.toLowerCase()} model`;
+  if(d.gccs.length&&!/how many/.test(s)){
+    d.gccs.slice(0,3).forEach(g=>out.push(`[gcc:${g.id}]: ${g.hq} parent, ${g.sector}, ${g.status.toLowerCase()} in ${g.cities.map(c=>`[city:${c}]`).join(", ")}, headcount ${g.band}. Source: ${g.srcLabel}${g.date?" ("+g.date+")":""}.`));
+    const sig=SIGNALS.filter(x=>d.gccs.some(g=>g.name.split(" ")[0]===x.name.split(" ")[0])); sig.forEach(x=>{const L=likelihood(x); out.push(`On the signals ladder: ${L==null?"operational":"likelihood "+Math.round(L*100)+"% of opening within 12 months"}.`);});
+    return out.join("\n");
+  }
+  if(/how many|number of|count/.test(s)&&/gcc|centre|center|capabilit/.test(s)){
+    if(d.cities.length) return d.cities.map(c=>{const x=cityById[c]; return x.gcc?`- [city:${c}] has **${fmt(x.gcc)} GCC companies**${x.ncr?" (NCR total, shared with the other NCR city)":""} [src:S3].${c==="blr"?" Zinnov counts 880+ centres there, a different unit [src:S10].":""}`:`- [city:${c}]: no published count.`}).join("\n");
+    return `About **2,117 GCC companies** running **3,728 centres** as of March 2026 [src:S2]. Government still quotes **1,700+** for FY24 [src:S1]. Our trend puts FY30 at roughly 2,437 to 2,949 (directional).`;
+  }
+  if(/arriv|coming|new gcc|signal|pipeline|entrant|announc|likel/.test(s)){
+    const list=SIGNALS.filter(x=>!x.sample&&(!d.cities.length||d.cities.includes(x.city))&&(!d.sectors.length||d.sectors.includes(x.sector)));
+    if(!list.length) return `No real signals match that yet. The ladder tracks ${SIGNALS.filter(x=>!x.sample).length} incoming GCCs, mostly in [city:hyd].`;
+    return `**${list.length} incoming GCC${list.length>1?"s":""}** on the ladder${d.cities.length?" in "+d.cities.map(c=>`[city:${c}]`).join(", "):""}:\n`+list.map(x=>{const L=likelihood(x);return `- **${x.name}** (${x.sector}, [city:${x.city}]): ${L==null?"operational":Math.round(L*100)+"% likely to be operational within 12 months"}`;}).join("\n")+`\nLikelihood is a judgement-weighted score over documented steps, not a trained model.`;
+  }
+  if(/polic|incentiv|subsid|rebate|reimburs|state/.test(s)){
+    const keys=[...new Set([...d.states,...d.cities.map(c=>cityById[c].pol)])];
+    if(keys.length) return keys.map(k=>{const p=POLICIES[k]; return `[policy:${k}]: **${p.name}**, ${p.status.toLowerCase()}. ${p.target&&p.target!=="Not stated"?"Target: "+p.target+". ":""}\n`+p.facts.map(f=>"- "+f).join("\n")+`\nSource: [src:${p.src}]${p.src2?" [src:"+p.src2+"]":""}`;}).join("\n");
+    const rated=Object.entries(POLICIES).filter(([,p])=>p.facts.some(f=>/%/.test(f)));
+    return `**${Object.values(POLICIES).filter(p=>p.status==="Dedicated").length} states have a dedicated GCC policy** [src:S7]. Those whose summaries give actual rates: ${rated.map(([k])=>`[policy:${k}]`).join(", ")}.\n`+Object.entries(POLICIES).map(([k,p])=>`- ${p.state}: ${p.status}`).join("\n");
+  }
+  if(/provider|partner|vendor|firm|eor|employer of record|build.operate|\bbot\b|law|legal|lawyer|broker|real estate|recruit|staffing|hiring partner|receipt|evidence|advis/.test(s)){
+    const cats=[[/eor|employer of record|payroll/,"Employer of record & payroll"],[/build.operate|\bbot\b|setup partner/,"Build-operate-transfer & setup"],[/law|legal|lawyer/,"Legal"],[/broker|real estate|office space|workplace/,"Real estate & workplace"],[/recruit|staffing|hiring/,"Hiring & staffing"],[/tax|account|audit|advis/,"Setup advisory, tax & accounting"],[/flex|cowork/,"Flexible workspace"]].filter(([r])=>r.test(s)).map(([,c])=>c);
+    const rs=receipts();
+    const ps=PROVIDERS.filter(p=>(!cats.length||cats.includes(p.cat))&&(!d.cities.length||d.cities.some(c=>p.cities.includes(c))));
+    const ev=p=>rs.filter(r=>r.prov===p.name);
+    ps.sort((a,b)=>ev(b).length-ev(a).length);
+    const withEv=rs.filter(r=>r.tier!=="Claimed");
+    return `${ps.length} provider${ps.length===1?"":"s"} match${cats.length?" ("+cats.join(", ")+")":""}${d.cities.length?" in "+d.cities.map(c=>`[city:${c}]`).join(", "):""}:\n`+ps.slice(0,8).map(p=>{const e=ev(p);return `- [prov:${p.id}]: ${p.services}. ${e.length?e.map(r=>r.tier+" receipt for "+r.client).join("; "):"No delivery receipts yet"}.`;}).join("\n")+(ps.length>8?`\n…and ${ps.length-8} more in the Providers tab.`:"")+`\nAcross the ledger, ${withEv.length} receipts are Reported or better and ${rs.filter(r=>r.tier==="Verified").length} are Verified.`;
+  }
+  const ranked=plan();
+  if(d.cities.length>=2||/compare|versus|\bvs\b/.test(s)&&d.cities.length){
+    const sel=ranked.filter(x=>d.cities.includes(x.c.id));
+    return `Comparing for ${ctx()}:\n`+sel.map(x=>"- "+cityLine(x)).join("\n")+`\n**${sel[0].c.name}** ranks higher on your current priorities. Cost per person differs by ${Math.round((Math.max(...sel.map(x=>x.perHead))/Math.min(...sel.map(x=>x.perHead))-1)*100)}%.`;
+  }
+  if(/rent|office|real estate|sq ?ft/.test(s)){
+    const cs=CITIES.slice().filter(c=>!d.cities.length||d.cities.includes(c.id)).sort((a,b)=>a.rent-b.rent);
+    return `Office market rents, ₹ per sq ft a month (metros from CRE Matrix Q1 CY26 [src:S5]; tier-2 are our estimates):\n`+cs.map(c=>`- [city:${c.id}]: ₹${c.rent}${c.rentSrc==="S8"?" (Estimate)":""}`).join("\n");
+  }
+  if(/cheap|cost|budget|salar|expens|afford|spend|price/.test(s)){
+    const byCost=ranked.slice().sort((a,b)=>a.total-b.total);
+    return `Cheapest to run, for ${ctx()} (Estimates):\n`+byCost.slice(0,5).map(x=>`- [city:${x.c.id}]: ₹${cr(x.total)} Cr a year ($${usdM(x.total)}M), ₹${(x.perHead/1e5).toFixed(1)} L per person`).join("\n")+`\nThe most expensive is [city:${byCost.at(-1).c.id}] at ₹${cr(byCost.at(-1).total)} Cr. Salaries are our estimates, so check them with a recruiter.`;
+  }
+  if(d.cities.length===1&&!/best|where|which city|recommend/.test(s)){
+    const x=ranked.find(y=>y.c.id===d.cities[0])||plan().find(y=>y.c.id===d.cities[0]); const c=cityById[d.cities[0]];
+    return `${cityLine(x)}.\n- ${c.note}\n- Strong in: ${c.strengths.join(", ")}.\n- GCCs in our sample there: ${GCCS.filter(g=>g.cities.includes(c.id)).slice(0,6).map(g=>`[gcc:${g.id}]`).join(", ")||"none yet"}.`;
+  }
+  if(/best|where|which city|recommend|location|set up|setup|should we|start/.test(s)||d.sectors.length||d.hc){
+    const [a,b,c]=ranked;
+    return `For ${ctx()}, **${a.c.name}** fits best (score ${a.score}), then ${b.c.name} (${b.score}) and ${c.c.name} (${c.score}).\n- `+cityLine(a)+`\n- `+cityLine(b)+`\n- Peers in your industries: ${a.peers.slice(0,4).map(g=>`[gcc:${g.id}]`).join(", ")||"none in our sample"}.\nPick ${b.c.name} if ${b.total<a.total?"lower cost":"its state policy"} matters more. Change the weights in the planner to see how the ranking moves.`;
+  }
+  return null;
+}
+function localExplain(){
+  const [a,b]=RANK; if(!a||!b) return "";
+  const comp=WEIGHTS.map(w=>({w,d:(a.s[w.id]-b.s[w.id])*P.w[w.id]})).sort((x,y)=>y.d-x.d);
+  const lc=t=>t.replace(/^\w/,c=>c.toLowerCase()).replace(/\bgcc\b/i,"GCC"); const lead=comp.filter(x=>x.d>0).slice(0,2).map(x=>lc(x.w.label)), lag=comp.filter(x=>x.d<0).map(x=>lc(x.w.label));
+  const risk=a.pressure>0.12?`hiring pressure: your headcount is ${a.pressure.toFixed(2)}% of the estimated local pool`:a.total>b.total?`cost: it is ₹${cr(a.total-b.total)} Cr a year dearer than ${b.c.name}`:`policy: confirm the incentive rates in the notified text of the ${a.pol.name}`;
+  return `**${a.c.name}** wins with ${a.score} against ${b.c.name}'s ${b.score}, mainly on ${lead.join(" and ")||"overall balance"} [city:${a.c.id}].\n- Main risk: ${risk}.\n- ${b.c.name} [city:${b.c.id}] is ahead on ${lag.join(", ")||"nothing you weighted"}. Pick it if those matter more than ${lead[0]||"the rest"}.\n- Annual run-rate: ₹${cr(a.total)} Cr vs ₹${cr(b.total)} Cr (Estimates), ${MODELS.find(m=>m.id===P.model).label.toLowerCase()} model, first hires in ${a.start}.`;
+}
+
+function enableExamples(){
+  $("#asknote").textContent="Offline mode: typed questions are answered directly from the ledger (cities, costs, counts, companies, incentives, providers, signals). Open-ended reasoning needs this page opened in Claude while signed in. The four examples on the right are earlier Claude answers.";
+  const s=$("#suggest"); s.innerHTML=`<span class="eyebrow">Example answers</span>`+EXAMPLES.map((x,i)=>`<button type="button" data-ex="${i}">${esc(x.q)}</button>`).join("");
+  s.insertAdjacentHTML("beforeend",`<span class="eyebrow" style="margin-top:8px">Answered from the ledger</span>`+["Cheapest city for a 150-person tech GCC","Compare Pune and Chennai","Which new GCCs are arriving in Hyderabad?","Haryana incentives","Legal firms in Pune","Tell me about Goldman Sachs"].map(q=>`<button type="button" data-lq="${esc(q)}">${esc(q)}</button>`).join(""));
+  s.querySelectorAll("[data-lq]").forEach(b=>b.onclick=()=>ask(b.dataset.lq));
+  s.querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>showExample(EXAMPLES[+b.dataset.ex]));
+  showExample(EXAMPLES[0]);
+}
+function addMsg(role,html){ const d=document.createElement("div"); d.className="msg "+role; d.innerHTML=html; chat.appendChild(d); d.scrollIntoView({block:"nearest"}); return d; }
+function setBusy(b){ busy=b; $("#send").disabled=b; $("#stop").hidden=!b; }
+const ERR={not_granted:"Claude isn't allowed for this page, so the assistant is off. Everything else still works.",sampling_disabled:"Claude isn't available for this account.",rate_limited:"Too many questions in a short time. Wait a minute and ask again.",session_expired:"Your session expired. Sign in again.",refused:"Claude declined that question. Try rephrasing it.",prompt_too_large:"This conversation got too long. Reload the page to start fresh."};
+async function ask(text){
+  text=(text||"").trim(); if(!text||busy) return;
+  show("ask");
+  if(!sampleFn){ const ex=EXAMPLES.find(x=>x.q===text); if(ex){ showExample(ex); return; }
+    addMsg("user",esc(text)); $("#q").value="";
+    const a=localAnswer(text);
+    addMsg("bot",a?`<span class="tier Reported">Answered from the ledger</span>`+renderMd(a):`<p>I can answer offline about city fit and cost, rents, GCC counts, a named company, state incentives, providers and receipts, and new GCC signals. Try "cheapest city for 150 people", "Karnataka incentives" or "legal firms in Pune". Open-ended questions need the page opened in Claude.</p>`); return; }
+  addMsg("user",esc(text)); $("#q").value=""; turns.push({role:"user",content:text});
+  const bubble=addMsg("bot",`<span class="thinking">Checking the ledger…</span>`);
+  setBusy(true); ctl=new AbortController();
+  try{
+    const {text:ans,truncated}=await sampleFn([{role:"user",content:RULES()},{role:"assistant",content:"Understood. I'll answer only from the dataset and cite every claim."},...turns.slice(-8)],{cache:false,signal:ctl.signal,onText:({text})=>{bubble.innerHTML=renderMd(text);}});
+    bubble.innerHTML=renderMd(ans)+(truncated?`<p class="note">Cut short. Ask a narrower question for the rest.</p>`:"");
+    turns.push({role:"assistant",content:ans});
+  }catch(e){
+    if(e&&e.code==="cancelled"){ bubble.innerHTML=(e.text?renderMd(e.text):"")+`<p class="note">Stopped.</p>`; if(e.text) turns.push({role:"assistant",content:e.text}); else turns.pop(); }
+    else { bubble.innerHTML=(e&&e.text&&e.code!=="refused"?renderMd(e.text):"")+`<p class="note">${esc(ERR[e?.code]||"Something went wrong reaching Claude. Try again in a moment.")}</p>`; turns.pop(); if(e?.code==="not_granted"||e?.code==="sampling_disabled") sampleFn=null; }
+  }finally{ setBusy(false); }
+}
+$("#composer").addEventListener("submit",e=>{e.preventDefault(); ask($("#q").value);});
+$("#stop").onclick=()=>ctl?.abort();
+$("#explain").onclick=()=>{
+  if(!sampleFn){ show("ask"); addMsg("user",esc(`Explain my planner result (${fmt(P.hc)} people, ${P.sectors.join(", ")})`)); addMsg("bot",`<span class="tier Reported">Answered from the ledger</span>`+renderMd(localExplain())); return; }
+  const top=RANK.slice(0,4).map((x,i)=>`${i+1}. ${x.c.name} (id ${x.c.id}): score ${x.score}, annual ₹${cr(x.total)} Cr, policy ${x.pol.status}, hiring pressure ${x.pressure.toFixed(2)}%`).join("\n");
+  ask(`I ran the entry planner for a ${P.hc}-person GCC in ${P.sectors.join(", ")} using the ${MODELS.find(m=>m.id===P.model).label} model. Priorities (0–5): ${WEIGHTS.map(w=>w.label+" "+P.w[w.id]).join(", ")}.\nTop results:\n${top}\nExplain why the top choice wins, the main risk, and when I should pick the runner-up instead.`);
+};
+addMsg("bot",`<p>Ask about cities, costs, state incentives, provider evidence or new GCCs. I answer from the ledger only, and each claim links to its record, for example <button class="cite" data-rec="policy:HR">Haryana policy</button> or <button class="cite" data-src="S2">Zinnov–nasscom</button>.</p>`);
+(async()=>{
+  try{ sampleFn = window.claude ? await window.claude.use("sample") : null; }catch(e){ sampleFn=null; }
+  if(!sampleFn) enableExamples();
+})();
+
+show((location.hash||"#overview").slice(1));
+</script>
+
+</html>

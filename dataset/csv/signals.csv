@@ -1,0 +1,49 @@
+﻿signal_id,company,sector,city,step_id,step,step_state,step_date,evidence,likelihood_operational_12m,type,confidence,source_id,source,source_url
+sig01,Illustrative: US specialty insurer,BFSI,Pune,ann,Announced or rumoured,not yet,,,0.622,invented,n/a,,,
+sig01,Illustrative: US specialty insurer,BFSI,Pune,ent,Entity incorporated (MCA),done,Month 0,Indian private limited subsidiary incorporated,0.622,invented,n/a,,,
+sig01,Illustrative: US specialty insurer,BFSI,Pune,space,Space approved (SEZ / STPI),done,Month 3,Unit approved in SEZ approval committee minutes,0.622,invented,n/a,,,
+sig01,Illustrative: US specialty insurer,BFSI,Pune,lease,Lease signed,not yet,,,0.622,invented,n/a,,,
+sig01,Illustrative: US specialty insurer,BFSI,Pune,hire,Hiring,not yet,,,0.622,invented,n/a,,,
+sig01,Illustrative: US specialty insurer,BFSI,Pune,op,Operational,not yet,,,0.622,invented,n/a,,,
+sig02,Illustrative: European medtech firm,Life sciences & healthcare,Bengaluru,ann,Announced or rumoured,not yet,,,0.818,invented,n/a,,,
+sig02,Illustrative: European medtech firm,Life sciences & healthcare,Bengaluru,ent,Entity incorporated (MCA),done,Month 0,Subsidiary incorporated,0.818,invented,n/a,,,
+sig02,Illustrative: European medtech firm,Life sciences & healthcare,Bengaluru,space,Space approved (SEZ / STPI),not yet,,,0.818,invented,n/a,,,
+sig02,Illustrative: European medtech firm,Life sciences & healthcare,Bengaluru,lease,Lease signed,done,Month 4,Lease named in a broker deal roundup,0.818,invented,n/a,,,
+sig02,Illustrative: European medtech firm,Life sciences & healthcare,Bengaluru,hire,Hiring,done,Month 5,Job posts for India site lead and engineers,0.818,invented,n/a,,,
+sig02,Illustrative: European medtech firm,Life sciences & healthcare,Bengaluru,op,Operational,not yet,,,0.818,invented,n/a,,,
+sig03,Southwest Airlines,Travel & transport,Hyderabad,ann,Announced or rumoured,done,2026,"Global Innovation Centre, ~1,000 roles planned",0.5,sourced,Medium,,Sights in Plus,https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/
+sig03,Southwest Airlines,Travel & transport,Hyderabad,ent,Entity incorporated (MCA),not checked,,,0.5,,,,,
+sig03,Southwest Airlines,Travel & transport,Hyderabad,space,Space approved (SEZ / STPI),not checked,,,0.5,,,,,
+sig03,Southwest Airlines,Travel & transport,Hyderabad,lease,Lease signed,not checked,,,0.5,,,,,
+sig03,Southwest Airlines,Travel & transport,Hyderabad,hire,Hiring,not checked,,,0.5,,,,,
+sig03,Southwest Airlines,Travel & transport,Hyderabad,op,Operational,not yet,,,0.5,,,,,
+sig04,Zimmer Biomet,Life sciences & healthcare,Bengaluru,ann,Announced or rumoured,done,2026,~500 hires over three years,0.5,sourced,Medium,,Sights in Plus,https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/
+sig04,Zimmer Biomet,Life sciences & healthcare,Bengaluru,ent,Entity incorporated (MCA),not checked,,,0.5,,,,,
+sig04,Zimmer Biomet,Life sciences & healthcare,Bengaluru,space,Space approved (SEZ / STPI),not checked,,,0.5,,,,,
+sig04,Zimmer Biomet,Life sciences & healthcare,Bengaluru,lease,Lease signed,not checked,,,0.5,,,,,
+sig04,Zimmer Biomet,Life sciences & healthcare,Bengaluru,hire,Hiring,not checked,,,0.5,,,,,
+sig04,Zimmer Biomet,Life sciences & healthcare,Bengaluru,op,Operational,not yet,,,0.5,,,,,
+sig05,Nationwide Mutual Insurance,BFSI,Hyderabad,ann,Announced or rumoured,done,Jul 2025,"500–1,000 jobs expected",Operational,sourced,Medium,,ETV Bharat,https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756
+sig05,Nationwide Mutual Insurance,BFSI,Hyderabad,ent,Entity incorporated (MCA),not checked,,,Operational,,,,,
+sig05,Nationwide Mutual Insurance,BFSI,Hyderabad,space,Space approved (SEZ / STPI),not checked,,,Operational,,,,,
+sig05,Nationwide Mutual Insurance,BFSI,Hyderabad,lease,Lease signed,done,Jul 2025,Raheja Mindspace reported,Operational,sourced,Medium,,ETV Bharat,https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756
+sig05,Nationwide Mutual Insurance,BFSI,Hyderabad,hire,Hiring,not checked,,,Operational,,,,,
+sig05,Nationwide Mutual Insurance,BFSI,Hyderabad,op,Operational,done,8 Jul 2026,Nationwide Global Services Center opened in Hyderabad,Operational,sourced,Medium,,Telangana Today,https://telanganatoday.com/us-insurance-giant-nationwide-opens-global-services-centre-in-hyderabad
+sig06,Costco,Retail & CPG,Hyderabad,ann,Announced or rumoured,done,Jul 2025,"~1,000 initial hiring target; Knowledge City",0.5,sourced,Medium,,ETV Bharat,https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756
+sig06,Costco,Retail & CPG,Hyderabad,ent,Entity incorporated (MCA),not checked,,,0.5,,,,,
+sig06,Costco,Retail & CPG,Hyderabad,space,Space approved (SEZ / STPI),not checked,,,0.5,,,,,
+sig06,Costco,Retail & CPG,Hyderabad,lease,Lease signed,not checked,,,0.5,,,,,
+sig06,Costco,Retail & CPG,Hyderabad,hire,Hiring,not checked,,,0.5,,,,,
+sig06,Costco,Retail & CPG,Hyderabad,op,Operational,not checked,,,0.5,,,,,
+sig07,JLL Business Services,Professional services,Hyderabad,ann,Announced or rumoured,done,Aug 2026,Second India hub after Gurugram,Operational,sourced,Medium,,CXO Digital Pulse,https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/
+sig07,JLL Business Services,Professional services,Hyderabad,ent,Entity incorporated (MCA),not checked,,,Operational,,,,,
+sig07,JLL Business Services,Professional services,Hyderabad,space,Space approved (SEZ / STPI),not checked,,,Operational,,,,,
+sig07,JLL Business Services,Professional services,Hyderabad,lease,Lease signed,done,Aug 2026,"120,000 sq ft",Operational,sourced,Medium,,CXO Digital Pulse,https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/
+sig07,JLL Business Services,Professional services,Hyderabad,hire,Hiring,done,Aug 2026,"To ~1,600 in two years",Operational,sourced,Medium,,CXO Digital Pulse,https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/
+sig07,JLL Business Services,Professional services,Hyderabad,op,Operational,done,Aug 2026,Opened,Operational,sourced,Medium,,CXO Digital Pulse,https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/
+sig08,Acumatica,Technology,Hyderabad,ann,Announced or rumoured,done,11 Aug 2026,"Engineering centre, Nanakramguda",Operational,sourced,Medium,,Telangana Today,https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad
+sig08,Acumatica,Technology,Hyderabad,ent,Entity incorporated (MCA),not checked,,,Operational,,,,,
+sig08,Acumatica,Technology,Hyderabad,space,Space approved (SEZ / STPI),not checked,,,Operational,,,,,
+sig08,Acumatica,Technology,Hyderabad,lease,Lease signed,not checked,,,Operational,,,,,
+sig08,Acumatica,Technology,Hyderabad,hire,Hiring,done,Aug 2026,"30+ staff, more to join",Operational,sourced,Medium,,Telangana Today,https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad
+sig08,Acumatica,Technology,Hyderabad,op,Operational,done,11 Aug 2026,Opened,Operational,sourced,Medium,,Telangana Today,https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad

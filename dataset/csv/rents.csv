@@ -1,0 +1,15 @@
+﻿city_id,city,tier,rent_inr_per_sqft_month,type,confidence,source_id,source,source_url
+blr,Bengaluru,1,132.6,sourced,Medium,S5,S5: CRE Matrix,https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/
+hyd,Hyderabad,1,76.8,sourced,Medium,S5,S5: CRE Matrix,https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/
+pun,Pune,1,90.2,sourced,Medium,S5,S5: CRE Matrix,https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/
+chn,Chennai,1,83.3,sourced,Medium,S5,S5: CRE Matrix,https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/
+ggn,Gurugram,1,102.9,sourced,Medium,S5,S5: CRE Matrix,https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/
+noi,Noida,1,102.9,sourced,Medium,S5,S5: CRE Matrix,https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/
+mum,Mumbai,1,170.8,sourced,Medium,S5,S5: CRE Matrix,https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/
+amd,Ahmedabad & GIFT City,2,55,estimate,Low,S8,S8: GCC Ledger estimate,
+jai,Jaipur,2,50,estimate,Low,S8,S8: GCC Ledger estimate,
+vsk,Visakhapatnam,2,45,estimate,Low,S8,S8: GCC Ledger estimate,
+idr,Indore,2,45,estimate,Low,S8,S8: GCC Ledger estimate,
+koc,Kochi,2,48,estimate,Low,S8,S8: GCC Ledger estimate,
+cbe,Coimbatore,2,48,estimate,Low,S8,S8: GCC Ledger estimate,
+kol,Kolkata,2,55,estimate,Low,S8,S8: GCC Ledger estimate,

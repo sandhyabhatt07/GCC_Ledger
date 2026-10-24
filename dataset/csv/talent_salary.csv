@@ -1,0 +1,21 @@
+﻿city_id,city,tech_talent_pool_people,salary_index_vs_bengaluru,type,confidence,source_id,source,source_url
+blr,Bengaluru,2000000,1,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+hyd,Hyderabad,1000000,0.95,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+pun,Pune,700000,0.93,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+chn,Chennai,800000,0.9,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+ggn,Gurugram,600000,0.98,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+noi,Noida,400000,0.92,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+mum,Mumbai,600000,1,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+amd,Ahmedabad & GIFT City,200000,0.82,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+jai,Jaipur,150000,0.78,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+vsk,Visakhapatnam,100000,0.75,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+idr,Indore,80000,0.72,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+koc,Kochi,150000,0.8,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+cbe,Coimbatore,120000,0.78,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+kol,Kolkata,300000,0.8,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+
+function_id,function,"base_salary_lakh_inr_per_year (Bengaluru, index 1.00)",default_mix_pct,type,confidence,source_id,source,source_url
+eng,Software engineering,20,50,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+data,Data & AI,24,20,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+ops,Finance & business ops,9,20,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,
+svc,Customer & shared services,5.5,10,estimate,Low,S6,S6: GCC Ledger estimate from staffing reports,

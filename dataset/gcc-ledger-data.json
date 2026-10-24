@@ -1,0 +1,2510 @@
+{
+ "SOURCES": {
+  "S1": {
+   "name": "India's GCC sector: >1,700 GCCs, 1.9M people, $64.6B in FY24",
+   "pub": "PIB / MeitY, citing nasscom",
+   "date": "2025-12-11",
+   "tier": "Reported",
+   "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/dec/doc20251211727701.pdf"
+  },
+  "S2": {
+   "name": "Zinnov–nasscom India GCC Landscape 2026: 2,117 GCCs, 3,728 units, 2.36M, $98.4B",
+   "pub": "Zinnov, nasscom",
+   "date": "2026-03 (data as of)",
+   "tier": "Reported",
+   "url": "https://zinnov.com/centers-of-excellence/zinnov-nasscom-india-gcc-landscape-2026-report/"
+  },
+  "S3": {
+   "name": "Vestian: ~1,700 GCCs; Bengaluru 487, Hyderabad 273, NCR 272, Mumbai 207, Pune 178, Chennai 162",
+   "pub": "Vestian via The Week (PTI)",
+   "date": "2025-07-21",
+   "tier": "Reported",
+   "url": "https://www.theweek.in/wire-updates/business/2025/07/21/dcm52-biz-realty-gcc.html"
+  },
+  "S4": {
+   "name": "Zinnov–KDEM study on mid-market GCCs in Karnataka",
+   "pub": "Zinnov press release",
+   "date": "2025-09-11",
+   "tier": "Reported",
+   "url": "https://zinnov.com/press-releases/mid-market-gccs-in-karnataka-are-emerging-as-strategic-innovation-engines-maturing-1-4x-faster-than-peers-zinnov-kdem-study/"
+  },
+  "S5": {
+   "name": "India office market Q1 CY26: market rents by city",
+   "pub": "CRE Matrix",
+   "date": "2026-Q1",
+   "tier": "Reported",
+   "url": "https://www.crematrix.com/blog/india-office-market-q1-cy26-key-trends-and-city-wise-performance/"
+  },
+  "S6": {
+   "name": "Salary bands and talent pool sizes",
+   "pub": "GCC Ledger estimate from staffing reports",
+   "date": "2025",
+   "tier": "Estimate",
+   "url": ""
+  },
+  "S7": {
+   "name": "CBRE, The Policy Advantage: states target ~1,380 new GCCs and 1.18M jobs by 2031",
+   "pub": "CBRE via Entrepreneur India",
+   "date": "2026-08-14",
+   "tier": "Reported",
+   "url": "https://india.entrepreneur.com/business-news/states-target-1-1-mn-gcc-jobs-by-2031-cbre"
+  },
+  "S8": {
+   "name": "Tier-2 rents, NCR city split and cost model",
+   "pub": "GCC Ledger estimate",
+   "date": "2026-10",
+   "tier": "Estimate",
+   "url": ""
+  },
+  "S9": {
+   "name": "Maharashtra cabinet approves GCC policy: 400 centres, 4 lakh jobs",
+   "pub": "PTI via The Week",
+   "date": "2025-09-30",
+   "tier": "Reported",
+   "url": "https://www.theweek.in/wire-updates/national/2025/09/30/bes21-mh-cab-gcc-policy.html"
+  },
+  "PKA": {
+   "name": "Karnataka Global Capability Center Policy 2024–2029: key features",
+   "pub": "India Briefing (Dezan Shira)",
+   "date": "2024-11",
+   "tier": "Reported",
+   "url": "https://www.india-briefing.com/news/karnataka-global-capability-center-policy-2024-2029-key-features-35441.html"
+  },
+  "PMH": {
+   "name": "Maharashtra GCC Policy 2025: key highlights and incentives",
+   "pub": "RSM India",
+   "date": "2026-01-30",
+   "tier": "Reported",
+   "url": "https://www.rsm.global/india/node/867"
+  },
+  "PHR": {
+   "name": "Government of Haryana notifies the Haryana GCC Policy, 2026",
+   "pub": "PwC India tax alert",
+   "date": "2026-06-03",
+   "tier": "Reported",
+   "url": "https://www.pwc.in/research-insights/news_alert/tax-insights/government-of-haryana-notifies-the-haryana-global-capability-centres-policy-2026.html"
+  },
+  "PUP": {
+   "name": "Impetus to GCCs in India: UP releases its final GCC Policy",
+   "pub": "Khaitan & Co",
+   "date": "2025-06-11",
+   "tier": "Reported",
+   "url": "https://khaitanco.com/sites/default/files/2025-06/ERGO%20-%20Impetus%20to%20GCCs%20in%20India_UP%20releases%20its%20final%20GCC%20Policy%20-%2011%20June%202025.pdf"
+  },
+  "PGJ": {
+   "name": "Gujarat unveils its GCC Policy 2025–2030",
+   "pub": "Rödl & Partner",
+   "date": "2025-02-20",
+   "tier": "Reported",
+   "url": "https://www.roedl.com/insights/india-global-capability-centers-gujarat-unveils-gcc-policy"
+  },
+  "PGJ2": {
+   "name": "Gujarat issues Operational Guidelines 1.0 for GCC Policy 2025–30",
+   "pub": "DeshGujarat",
+   "date": "2026-10-03",
+   "tier": "Reported",
+   "url": "https://deshgujarat.com/2026/10/03/gujarat-govt-issues-operational-guidelines-1-0-for-implementation-of-gcc-policy-2025-30/"
+  },
+  "PGJ3": {
+   "name": "Gujarat GCC Policy 2025–30 launched at GIFT City: at least 250 new GCC units, 50,000+ jobs",
+   "pub": "DeshGujarat",
+   "date": "2025-02-11",
+   "tier": "Reported",
+   "url": "https://deshgujarat.com/2025/02/11/gujarat-global-capability-centre-policy-2025-30-launched-at-gift-city-gandhinagar/"
+  },
+  "PHR2": {
+   "name": "Haryana is driving GCC expansion with a policy framework (incentive rates)",
+   "pub": "JLL India",
+   "date": "2026-07-06",
+   "tier": "Reported",
+   "url": "https://www.jll.com/en-in/insights/haryana-is-driving-gcc-expansion-with-a-policy-framework"
+  },
+  "PRJ": {
+   "name": "Impetus to GCCs in India: Rajasthan releases its GCC Policy",
+   "pub": "Khaitan & Co",
+   "date": "2025-12-16",
+   "tier": "Reported",
+   "url": "https://www.khaitanco.com/sites/default/files/2025-12/Ergo%20-%20Impetus%20to%20GCCs%20in%20India%20-%20Rajasthan%20releases%20its%20GCC%20Policy%20-%2016%20December%202025.pdf"
+  },
+  "PMP": {
+   "name": "Madhya Pradesh GCC Policy 2025",
+   "pub": "Drishti IAS",
+   "date": "2025-02-17",
+   "tier": "Reported",
+   "url": "https://www.drishtiias.com/state-pcs-current-affairs/madhya-pradesh-gcc-policy-2025"
+  },
+  "PAP": {
+   "name": "Andhra Pradesh releases its IT and GCC Policy 4.0 (2024–29)",
+   "pub": "Khaitan & Co",
+   "date": "2025-01-14",
+   "tier": "Reported",
+   "url": "https://khaitanco.com/thought-leadership/Impetus-to-GCCs-in-India-Andhra-Pradesh-Releases-its-IT-and-GCC-Policy"
+  },
+  "PTG": {
+   "name": "New Telangana GCC policy to focus on AI, space, semiconductors",
+   "pub": "Siasat, citing The Times of India",
+   "date": "2026-09-17",
+   "tier": "Reported",
+   "url": "https://www.siasat.com/new-telangana-gcc-policy-to-focus-on-ai-space-semiconductors-3543873/"
+  },
+  "S10": {
+   "name": "5 shifts defining India's GCC story in 2025: Bengaluru 880+ centers, Hyderabad 355+, India 1,760+ centers",
+   "pub": "Zinnov blog",
+   "date": "2026-01-08",
+   "tier": "Reported",
+   "url": "https://zinnov.com/centers-of-excellence/5-shifts-defining-indias-global-capability-centers-gccs-story-in-2025-blog"
+  },
+  "PEND": {
+   "name": "Source pending",
+   "pub": "No linked source yet",
+   "date": "",
+   "tier": "Pending",
+   "url": ""
+  }
+ },
+ "COUNT_CLAIMS": [
+  {
+   "label": "Zinnov–nasscom, FY26",
+   "val": 2117,
+   "unit": "companies",
+   "what": "2,117 GCCs, 2.36M people, $98.4B. 583 are mid-market firms. Data as of March 2026.",
+   "src": "S2"
+  },
+  {
+   "label": "Zinnov–nasscom, FY26",
+   "val": 3728,
+   "unit": "centres",
+   "what": "3,728 units: the same companies counted per centre.",
+   "src": "S2"
+  },
+  {
+   "label": "MeitY citing nasscom, FY24",
+   "val": 1700,
+   "unit": "companies",
+   "what": "More than 1,700 GCCs, 1.9M people, $64.6B. Still the figure most quoted by government in late 2025.",
+   "src": "S1"
+  },
+  {
+   "label": "Vestian, Jul 2025",
+   "val": 1700,
+   "unit": "companies",
+   "what": "Nearly 1,700 GCCs, with the city split shown alongside.",
+   "src": "S3"
+  },
+  {
+   "label": "Speeches and press",
+   "val": 2000,
+   "unit": "unclear",
+   "what": "\"2,000+\" with no stated definition or date.",
+   "src": "PEND"
+  }
+ ],
+ "CONFLICTS": [
+  {
+   "title": "How many GCCs in Bengaluru?",
+   "a": {
+    "big": "487",
+    "txt": "GCC companies with a centre in Bengaluru. Vestian, Jul 2025.",
+    "src": "S3"
+   },
+   "b": {
+    "big": "880+",
+    "txt": "GCC centres in Bengaluru. Zinnov, Jan 2026.",
+    "src": "S10"
+   },
+   "read": "Both can be right: one counts companies, the other counts centres. The same Zinnov post counts 1,760+ centres in India by end-2025, while the FY26 landscape counts 3,728 units, another definitional gap."
+  },
+  {
+   "title": "Maharashtra's GCC target",
+   "a": {
+    "big": "400",
+    "txt": "new centres, 4 lakh jobs. Cabinet approval, Sep 2025.",
+    "src": "S9"
+   },
+   "b": {
+    "big": "~200",
+    "txt": "centres, 4 lakh jobs by 2030. CBRE, Aug 2026.",
+    "src": "S7"
+   },
+   "read": "Same job target, half the centres. We show both until the notified policy text is linked."
+  },
+  {
+   "title": "Karnataka's mid-market GCCs",
+   "a": {
+    "big": "230+",
+    "txt": "mid-market GCCs in Karnataka.",
+    "src": "S4"
+   },
+   "b": {
+    "big": "240+",
+    "txt": "mid-sized GCC units in Bengaluru alone.",
+    "src": "S4"
+   },
+   "read": "Both numbers are in the same press release. A city cannot hold more than its state, unless one counts companies and the other counts units."
+  }
+ ],
+ "CITY_COUNTS": [
+  [
+   "Bengaluru",
+   487
+  ],
+  [
+   "Hyderabad",
+   273
+  ],
+  [
+   "Delhi NCR",
+   272
+  ],
+  [
+   "Mumbai",
+   207
+  ],
+  [
+   "Pune",
+   178
+  ],
+  [
+   "Chennai",
+   162
+  ]
+ ],
+ "SECTORS": [
+  "BFSI",
+  "Technology",
+  "Retail & CPG",
+  "Life sciences & healthcare",
+  "Auto & engineering",
+  "Semiconductors",
+  "Aerospace & industrial",
+  "Energy",
+  "Telecom",
+  "Travel & transport",
+  "Professional services"
+ ],
+ "CITIES": [
+  {
+   "id": "blr",
+   "name": "Bengaluru",
+   "state": "Karnataka",
+   "pol": "KA",
+   "tier": 1,
+   "gcc": 487,
+   "rent": 132.6,
+   "rentSrc": "S5",
+   "talentK": 2000,
+   "salIdx": 1,
+   "conn": 5,
+   "clusters": [
+    "Outer Ring Road",
+    "Whitefield",
+    "Manyata Tech Park",
+    "North Bengaluru",
+    "Electronic City"
+   ],
+   "strengths": [
+    "Technology",
+    "Semiconductors",
+    "Retail & CPG",
+    "BFSI",
+    "Auto & engineering",
+    "Aerospace & industrial"
+   ],
+   "note": "Largest GCC cluster and talent pool, and the highest metro rent after Mumbai."
+  },
+  {
+   "id": "hyd",
+   "name": "Hyderabad",
+   "state": "Telangana",
+   "pol": "TG",
+   "tier": 1,
+   "gcc": 273,
+   "rent": 76.8,
+   "rentSrc": "S5",
+   "talentK": 1000,
+   "salIdx": 0.95,
+   "conn": 4,
+   "clusters": [
+    "HITEC City",
+    "Gachibowli",
+    "Financial District",
+    "Kokapet"
+   ],
+   "strengths": [
+    "Life sciences & healthcare",
+    "BFSI",
+    "Technology",
+    "Retail & CPG"
+   ],
+   "note": "Many recent US entrants. Lowest metro market rent in Q1 CY26."
+  },
+  {
+   "id": "pun",
+   "name": "Pune",
+   "state": "Maharashtra",
+   "pol": "MH",
+   "tier": 1,
+   "gcc": 178,
+   "rent": 90.2,
+   "rentSrc": "S5",
+   "talentK": 700,
+   "salIdx": 0.93,
+   "conn": 3,
+   "clusters": [
+    "Kharadi",
+    "Hinjewadi",
+    "Baner",
+    "Hadapsar",
+    "Yerwada"
+   ],
+   "strengths": [
+    "BFSI",
+    "Auto & engineering",
+    "Technology"
+   ],
+   "note": "Banking operations and engineering. Fewer direct international flights."
+  },
+  {
+   "id": "chn",
+   "name": "Chennai",
+   "state": "Tamil Nadu",
+   "pol": "TN",
+   "tier": 1,
+   "gcc": 162,
+   "rent": 83.3,
+   "rentSrc": "S5",
+   "talentK": 800,
+   "salIdx": 0.9,
+   "conn": 4,
+   "clusters": [
+    "OMR",
+    "Guindy",
+    "Perungudi",
+    "Taramani"
+   ],
+   "strengths": [
+    "Auto & engineering",
+    "BFSI",
+    "Life sciences & healthcare",
+    "Telecom"
+   ],
+   "note": "Deep engineering base; popular for BFSI operations and auto R&D."
+  },
+  {
+   "id": "ggn",
+   "name": "Gurugram",
+   "state": "Haryana",
+   "pol": "HR",
+   "tier": 1,
+   "gcc": 272,
+   "ncr": true,
+   "rent": 102.9,
+   "rentSrc": "S5",
+   "talentK": 600,
+   "salIdx": 0.98,
+   "conn": 5,
+   "clusters": [
+    "Cyber City",
+    "Golf Course Ext. Road",
+    "Sohna Road"
+   ],
+   "strengths": [
+    "BFSI",
+    "Technology",
+    "Telecom",
+    "Professional services"
+   ],
+   "note": "GCC count and rent are for all of Delhi NCR; no city split is published."
+  },
+  {
+   "id": "noi",
+   "name": "Noida",
+   "state": "Uttar Pradesh",
+   "pol": "UP",
+   "tier": 1,
+   "gcc": 272,
+   "ncr": true,
+   "rent": 102.9,
+   "rentSrc": "S5",
+   "talentK": 400,
+   "salIdx": 0.92,
+   "conn": 4,
+   "clusters": [
+    "Sector 62",
+    "Noida Expressway",
+    "Greater Noida"
+   ],
+   "strengths": [
+    "Technology",
+    "Telecom",
+    "Life sciences & healthcare"
+   ],
+   "note": "GCC count and rent are for all of Delhi NCR. Noida rents are usually below Gurugram's."
+  },
+  {
+   "id": "mum",
+   "name": "Mumbai",
+   "state": "Maharashtra",
+   "pol": "MH",
+   "tier": 1,
+   "gcc": 207,
+   "rent": 170.8,
+   "rentSrc": "S5",
+   "talentK": 600,
+   "salIdx": 1,
+   "conn": 5,
+   "clusters": [
+    "BKC",
+    "Powai",
+    "Andheri–Kurla",
+    "Thane–Belapur Road"
+   ],
+   "strengths": [
+    "BFSI",
+    "Retail & CPG"
+   ],
+   "note": "Highest rents; most GCCs sit in Powai, Thane or Navi Mumbai."
+  },
+  {
+   "id": "amd",
+   "name": "Ahmedabad & GIFT City",
+   "state": "Gujarat",
+   "pol": "GJ",
+   "tier": 2,
+   "gcc": null,
+   "rent": 55,
+   "rentSrc": "S8",
+   "talentK": 200,
+   "salIdx": 0.82,
+   "conn": 3,
+   "clusters": [
+    "SG Highway",
+    "GIFT City"
+   ],
+   "strengths": [
+    "BFSI",
+    "Life sciences & healthcare"
+   ],
+   "note": "Gujarat publishes the most detailed incentive rates of any state."
+  },
+  {
+   "id": "jai",
+   "name": "Jaipur",
+   "state": "Rajasthan",
+   "pol": "RJ",
+   "tier": 2,
+   "gcc": null,
+   "rent": 50,
+   "rentSrc": "S8",
+   "talentK": 150,
+   "salIdx": 0.78,
+   "conn": 3,
+   "clusters": [
+    "Mahindra World City",
+    "Sitapura"
+   ],
+   "strengths": [
+    "Technology",
+    "BFSI"
+   ],
+   "note": "Rajasthan's policy reimburses 30% of salaries for three years for its first qualifying GCCs."
+  },
+  {
+   "id": "vsk",
+   "name": "Visakhapatnam",
+   "state": "Andhra Pradesh",
+   "pol": "AP",
+   "tier": 2,
+   "gcc": null,
+   "rent": 45,
+   "rentSrc": "S8",
+   "talentK": 100,
+   "salIdx": 0.75,
+   "conn": 2,
+   "clusters": [
+    "Rushikonda IT Park",
+    "Madhurawada"
+   ],
+   "strengths": [
+    "Technology"
+   ],
+   "note": "Covered by Andhra Pradesh's IT & GCC Policy 4.0."
+  },
+  {
+   "id": "idr",
+   "name": "Indore",
+   "state": "Madhya Pradesh",
+   "pol": "MP",
+   "tier": 2,
+   "gcc": null,
+   "rent": 45,
+   "rentSrc": "S8",
+   "talentK": 80,
+   "salIdx": 0.72,
+   "conn": 2,
+   "clusters": [
+    "Super Corridor",
+    "Crystal IT Park"
+   ],
+   "strengths": [
+    "Technology"
+   ],
+   "note": "MP targets 50+ GCCs; few anchor GCCs so far."
+  },
+  {
+   "id": "koc",
+   "name": "Kochi",
+   "state": "Kerala",
+   "pol": "KL",
+   "tier": 2,
+   "gcc": null,
+   "rent": 48,
+   "rentSrc": "S8",
+   "talentK": 150,
+   "salIdx": 0.8,
+   "conn": 3,
+   "clusters": [
+    "Infopark Kakkanad",
+    "SmartCity Kochi"
+   ],
+   "strengths": [
+    "Technology"
+   ],
+   "note": "Kerala's GCC policy is still a draft."
+  },
+  {
+   "id": "cbe",
+   "name": "Coimbatore",
+   "state": "Tamil Nadu",
+   "pol": "TN",
+   "tier": 2,
+   "gcc": null,
+   "rent": 48,
+   "rentSrc": "S8",
+   "talentK": 120,
+   "salIdx": 0.78,
+   "conn": 2,
+   "clusters": [
+    "Saravanampatti",
+    "TIDEL Park"
+   ],
+   "strengths": [
+    "Auto & engineering"
+   ],
+   "note": "Engineering colleges and a manufacturing base."
+  },
+  {
+   "id": "kol",
+   "name": "Kolkata",
+   "state": "West Bengal",
+   "pol": "WB",
+   "tier": 2,
+   "gcc": null,
+   "rent": 55,
+   "rentSrc": "S8",
+   "talentK": 300,
+   "salIdx": 0.8,
+   "conn": 3,
+   "clusters": [
+    "Sector V, Salt Lake",
+    "New Town"
+   ],
+   "strengths": [
+    "BFSI"
+   ],
+   "note": "Low cost, mostly operations work. West Bengal is not on CBRE's list of GCC policies."
+  }
+ ],
+ "POLICIES": {
+  "KA": {
+   "state": "Karnataka",
+   "name": "Karnataka GCC Policy 2024–29",
+   "status": "Dedicated",
+   "date": "Released 19 Nov 2024",
+   "target": "500 new GCCs and ~3.5 lakh jobs by 2029",
+   "facts": [
+    "50% reimbursement of internship stipends, up to 1 lakh students",
+    "Beyond Bengaluru: 5-year electricity duty exemption, rent and EPF support",
+    "Property tax reimbursement; nano GCCs (5–50 staff) eligible",
+    "Approvals within 45 days"
+   ],
+   "src": "PKA"
+  },
+  "MH": {
+   "state": "Maharashtra",
+   "name": "Maharashtra GCC Policy 2025",
+   "status": "Dedicated",
+   "date": "Cabinet approved 30 Sep 2025",
+   "target": "Sources disagree: 400 centres (Sep 2025) vs ~200 centres (CBRE, Aug 2026); both say 4 lakh jobs",
+   "facts": [
+    "Capital subsidy linked to fixed capital investment",
+    "Payroll reimbursement for high-skilled staff",
+    "Rent and power tariff assistance; R&D and patent support",
+    "Interest subsidy in tier-2 regions"
+   ],
+   "src": "PMH",
+   "src2": "S9"
+  },
+  "HR": {
+   "state": "Haryana",
+   "name": "Haryana GCC Policy 2026",
+   "status": "Dedicated",
+   "date": "Dated 27 May 2026, five years",
+   "target": "100+ new GCCs and 30,000+ jobs",
+   "facts": [
+    "Capex reimbursement 50% (non-TOD Gurugram), 65% (TOD Gurugram) or 75% (other districts), paid over 10 years",
+    "Opex 50–65% for 5–9 years, capped at ₹75 L per 100 employees or ₹15 Cr a year",
+    "Up to ₹1 L per employee; R&D grants up to ₹50 Cr per centre",
+    "8% interest on delayed incentives. JLL's capex caps (₹2.5 Cr per 100 staff or ₹75 Cr leased) read inconsistently, so check the notified text"
+   ],
+   "src": "PHR",
+   "src2": "PHR2"
+  },
+  "UP": {
+   "state": "Uttar Pradesh",
+   "name": "Uttar Pradesh GCC Policy",
+   "status": "Dedicated",
+   "date": "Final policy published 2025",
+   "target": "Not stated in source",
+   "facts": [
+    "Level-1 in Noida or Ghaziabad: ₹20 Cr investment or 200 staff",
+    "Land subsidy 30–50%; 100% stamp duty exemption",
+    "5% interest subsidy; opex support for lease, bandwidth, cloud and power",
+    "Payroll and recruitment subsidies for specified groups"
+   ],
+   "src": "PUP"
+  },
+  "GJ": {
+   "state": "Gujarat",
+   "name": "Gujarat GCC Policy 2025–30",
+   "status": "Dedicated",
+   "date": "Launched Feb 2025; Operational Guidelines 1.0 issued 3 Oct 2026",
+   "target": "250+ new GCCs and 50,000+ jobs by 2030",
+   "facts": [
+    "Capex 20% (non-IT) or 30% (IT), up to ₹50 Cr; ₹200 Cr for mega projects",
+    "Opex 15%, up to ₹20 Cr; ₹400 Cr for mega projects",
+    "One-time 50% of CTC per new hire, up to ₹60k (women) or ₹50k (men); EPF support 5 years",
+    "7% interest subsidy; 100% electricity duty exemption for 5 years"
+   ],
+   "src": "PGJ",
+   "src2": "PGJ3"
+  },
+  "RJ": {
+   "state": "Rajasthan",
+   "name": "Rajasthan GCC Policy 2025",
+   "status": "Dedicated",
+   "date": "Valid to 31 Mar 2029",
+   "target": "200+ GCCs and 1.5 lakh jobs by 2030",
+   "facts": [
+    "30% salary reimbursement for 3 years, up to ₹1.25 L per employee and ₹10 Cr per GCC a year",
+    "Rent 50% for 3 years then 25% for 2, up to ₹5 Cr a year",
+    "Salary and rent support limited to the first 10 GCCs per size band",
+    "Capital subsidy 30% up to ₹10 Cr (investment route)"
+   ],
+   "src": "PRJ"
+  },
+  "MP": {
+   "state": "Madhya Pradesh",
+   "name": "Madhya Pradesh GCC Policy 2025",
+   "status": "Dedicated",
+   "date": "Launched Feb 2025",
+   "target": "50+ GCCs and 37,000+ jobs",
+   "facts": [
+    "Capex, payroll, upskilling and R&D incentives (rates not in summary)"
+   ],
+   "src": "PMP"
+  },
+  "AP": {
+   "state": "Andhra Pradesh",
+   "name": "AP IT & GCC Policy 4.0 (2024–29)",
+   "status": "Dedicated",
+   "date": "Government order 12 Dec 2024",
+   "target": "Not stated in source",
+   "facts": [
+    "Recruitment, rental, power and employee incentives for GCCs",
+    "Rates set in separate operating guidelines"
+   ],
+   "src": "PAP"
+  },
+  "TG": {
+   "state": "Telangana",
+   "name": "Telangana GCC framework; new policy in drafting",
+   "status": "Framework",
+   "date": "Draft reported 17 Sep 2026",
+   "target": "Not stated",
+   "facts": [
+    "New policy expected to target AI, space, semiconductors, quantum and life sciences",
+    "Push to tier-2 towns (Warangal, Karimnagar and others)",
+    "Targeted rather than blanket incentives"
+   ],
+   "src": "PTG",
+   "src2": "S7"
+  },
+  "DL": {
+   "state": "Delhi",
+   "name": "Delhi GCC framework",
+   "status": "Framework",
+   "date": "Per CBRE, Aug 2026",
+   "target": "Not stated",
+   "facts": [
+    "Framework adopted; no details in source"
+   ],
+   "src": "S7"
+  },
+  "KL": {
+   "state": "Kerala",
+   "name": "Kerala GCC policy (draft)",
+   "status": "Draft",
+   "date": "Per CBRE, Aug 2026",
+   "target": "~80 GCCs and 1.6 lakh jobs",
+   "facts": [
+    "Draft policy proposed; incentives not final"
+   ],
+   "src": "S7"
+  },
+  "TN": {
+   "state": "Tamil Nadu",
+   "name": "Tamil Nadu: GCC employee incentives",
+   "status": "Incentives only",
+   "date": "Per CBRE, Aug 2026",
+   "target": "Not stated",
+   "facts": [
+    "No dedicated GCC policy on CBRE's list; incentives for GCC employees introduced"
+   ],
+   "src": "S7"
+  },
+  "WB": {
+   "state": "West Bengal",
+   "name": "No GCC policy listed",
+   "status": "Not listed",
+   "date": "Per CBRE, Aug 2026",
+   "target": "",
+   "facts": [
+    "Not on CBRE's list of states with GCC policies or frameworks"
+   ],
+   "src": "S7"
+  }
+ },
+ "POLSCORE": {
+  "Dedicated": 1,
+  "Framework": 0.6,
+  "Draft": 0.4,
+  "Incentives only": 0.4,
+  "Not listed": 0
+ },
+ "CHANGES": [
+  {
+   "date": "2026-03-31",
+   "rec": "count",
+   "what": "India GCC count",
+   "before": "1,700+ companies (FY24)",
+   "after": "2,117 companies (FY26)",
+   "src": "S2"
+  },
+  {
+   "date": "2026-04-01",
+   "rec": "rent",
+   "what": "Office rents (Q1 CY26 release)",
+   "before": "Ledger v1 Grade A averages (e.g. Bengaluru ₹92)",
+   "after": "Market rents (e.g. Bengaluru ₹132.6)",
+   "src": "S5"
+  },
+  {
+   "date": "2026-05-27",
+   "rec": "policy:HR",
+   "what": "Haryana",
+   "before": "No dedicated GCC policy",
+   "after": "Haryana GCC Policy 2026 notified",
+   "src": "PHR"
+  },
+  {
+   "date": "2026-07-06",
+   "rec": "policy:HR",
+   "what": "Haryana rates",
+   "before": "Incentive types only",
+   "after": "Rates published (JLL)",
+   "src": "PHR2"
+  },
+  {
+   "date": "2026-08-14",
+   "rec": "policy:MH",
+   "what": "Maharashtra target",
+   "before": "400 new centres",
+   "after": "~200 centres per CBRE (both say 4 lakh jobs)",
+   "src": "S7"
+  },
+  {
+   "date": "2026-09-17",
+   "rec": "policy:TG",
+   "what": "Telangana",
+   "before": "Relies on ICT policy",
+   "after": "New GCC policy in drafting, targeted incentives",
+   "src": "PTG"
+  },
+  {
+   "date": "2026-10-03",
+   "rec": "policy:GJ",
+   "what": "Gujarat",
+   "before": "Operational guidelines pending",
+   "after": "Operational Guidelines 1.0 issued",
+   "src": "PGJ2"
+  }
+ ],
+ "GCCS": [
+  {
+   "id": "g01",
+   "name": "Vanguard",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "hyd"
+   ],
+   "band": "<1k (2,500 planned)",
+   "status": "Ramping",
+   "url": "https://deccanchronicle.com/southern-states/telangana/vanguard-to-establish-first-india-gcc-in-hyderabad-1870017",
+   "srcLabel": "Deccan Chronicle",
+   "date": "2025"
+  },
+  {
+   "id": "g02",
+   "name": "McDonald's Global Office",
+   "hq": "USA",
+   "sector": "Retail & CPG",
+   "cities": [
+    "hyd"
+   ],
+   "band": "<1k (2,000 planned)",
+   "status": "Ramping",
+   "url": "https://www.nrn.com/quick-service/mcdonald-s-opens-a-global-capacity-center-in-india",
+   "srcLabel": "Nation's Restaurant News",
+   "date": "2025"
+  },
+  {
+   "id": "g03",
+   "name": "Eli Lilly",
+   "hq": "USA",
+   "sector": "Life sciences & healthcare",
+   "cities": [
+    "hyd"
+   ],
+   "band": "<1k",
+   "status": "Ramping",
+   "url": "https://www.indianpharmapost.com/digitisation/eli-lilly-inaugurates-global-capability-centre-in-hyderabad-to-advance-ai-initiatives-17540",
+   "srcLabel": "Indian Pharma Post",
+   "date": "2025"
+  },
+  {
+   "id": "g04",
+   "name": "Lloyds Banking Group Technology Centre",
+   "hq": "UK",
+   "sector": "BFSI",
+   "cities": [
+    "hyd"
+   ],
+   "band": "<1k (600 planned)",
+   "status": "Ramping",
+   "url": "https://finextra.com/newsarticle/42516/lloyds-bank-sets-up-tech-centre-in-hyderabad",
+   "srcLabel": "Finextra",
+   "date": "2023"
+  },
+  {
+   "id": "g05",
+   "name": "Sanofi Global Hub",
+   "hq": "France",
+   "sector": "Life sciences & healthcare",
+   "cities": [
+    "hyd"
+   ],
+   "band": "1k–5k (2,600 → 4,500+)",
+   "status": "Operating",
+   "url": "https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/",
+   "srcLabel": "Sights in Plus",
+   "date": "2026"
+  },
+  {
+   "id": "g06",
+   "name": "Arch Capital Group",
+   "hq": "Bermuda",
+   "sector": "BFSI",
+   "cities": [
+    "pun"
+   ],
+   "band": "<1k (350+)",
+   "status": "Operating",
+   "url": "https://cxotoday.com/media-coverage/arch-capital-group-opens-global-capabilities-centers-in-india/",
+   "srcLabel": "CXOToday",
+   "date": "2025-08"
+  },
+  {
+   "id": "g07",
+   "name": "JLL Business Services",
+   "hq": "USA",
+   "sector": "Professional services",
+   "cities": [
+    "hyd",
+    "ggn"
+   ],
+   "band": "1k–5k (to 1,600 in Hyderabad)",
+   "status": "Ramping",
+   "url": "https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/",
+   "srcLabel": "CXO Digital Pulse",
+   "date": "2026-08"
+  },
+  {
+   "id": "g08",
+   "name": "Acumatica",
+   "hq": "USA",
+   "sector": "Technology",
+   "cities": [
+    "hyd"
+   ],
+   "band": "<1k (30+)",
+   "status": "Ramping",
+   "url": "https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad",
+   "srcLabel": "Telangana Today",
+   "date": "2026-08"
+  },
+  {
+   "id": "g09",
+   "name": "Southwest Airlines",
+   "hq": "USA",
+   "sector": "Travel & transport",
+   "cities": [
+    "hyd"
+   ],
+   "band": "~1,000 planned",
+   "status": "Announced",
+   "url": "https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/",
+   "srcLabel": "Sights in Plus",
+   "date": "2026"
+  },
+  {
+   "id": "g10",
+   "name": "Zimmer Biomet",
+   "hq": "USA",
+   "sector": "Life sciences & healthcare",
+   "cities": [
+    "blr"
+   ],
+   "band": "~500 over 3 years",
+   "status": "Announced",
+   "url": "https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/",
+   "srcLabel": "Sights in Plus",
+   "date": "2026"
+  },
+  {
+   "id": "g11",
+   "name": "Nestlé Business Solutions",
+   "hq": "Switzerland",
+   "sector": "Retail & CPG",
+   "cities": [
+    "hyd"
+   ],
+   "band": "Not disclosed",
+   "status": "Announced",
+   "url": "https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/",
+   "srcLabel": "Sights in Plus",
+   "date": "2026"
+  },
+  {
+   "id": "g12",
+   "name": "Costco",
+   "hq": "USA",
+   "sector": "Retail & CPG",
+   "cities": [
+    "hyd"
+   ],
+   "band": "~1,000 initial target",
+   "status": "Announced",
+   "url": "https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756",
+   "srcLabel": "ETV Bharat",
+   "date": "2025-07"
+  },
+  {
+   "id": "g13",
+   "name": "Nationwide Mutual Insurance",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "hyd"
+   ],
+   "band": "<1k (500–1,000 expected)",
+   "status": "Operating",
+   "url": "https://telanganatoday.com/us-insurance-giant-nationwide-opens-global-services-centre-in-hyderabad",
+   "srcLabel": "Telangana Today",
+   "date": "2026-07"
+  },
+  {
+   "id": "g14",
+   "name": "Walmart Global Tech",
+   "hq": "USA",
+   "sector": "Retail & CPG",
+   "cities": [
+    "blr",
+    "chn"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://english.punjabkesari.com/india/2025/04/17/walmart-expands-in-india-with-new-tech-hub-in-chennai",
+   "srcLabel": "Punjab Kesari (new Chennai hub)",
+   "date": "2025-04"
+  },
+  {
+   "id": "g15",
+   "name": "Target in India",
+   "hq": "USA",
+   "sector": "Retail & CPG",
+   "cities": [
+    "blr"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://yourstory.com/enterprise-story/2026/08/target-in-india-global-capability-hub",
+   "srcLabel": "YourStory",
+   "date": "2026-08"
+  },
+  {
+   "id": "g16",
+   "name": "Lowe's India",
+   "hq": "USA",
+   "sector": "Retail & CPG",
+   "cities": [
+    "blr"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://corporate.lowes.com/newsroom/press-releases/lowes-announces-james-brandt-managing-director-lowes-india-05-05-17",
+   "srcLabel": "Lowe's press release",
+   "date": "2017-05"
+  },
+  {
+   "id": "g17",
+   "name": "Tesco Business Solutions",
+   "hq": "UK",
+   "sector": "Retail & CPG",
+   "cities": [
+    "blr"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://www.peoplematters.in/news/employee-engagement/tesco-plans-for-india-expansion-to-hire-1000-people-35333",
+   "srcLabel": "People Matters",
+   "date": ""
+  },
+  {
+   "id": "g18",
+   "name": "JPMorgan Chase",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "mum",
+    "blr",
+    "hyd"
+   ],
+   "band": "10k+ (55,000+)",
+   "status": "Operating",
+   "url": "https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/",
+   "srcLabel": "Reuters factbox via Stockopedia",
+   "date": "2026-05"
+  },
+  {
+   "id": "g19",
+   "name": "Goldman Sachs",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "blr",
+    "hyd"
+   ],
+   "band": "5k–10k (~9,000)",
+   "status": "Operating",
+   "url": "https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/",
+   "srcLabel": "Reuters factbox via Stockopedia",
+   "date": "2026-05"
+  },
+  {
+   "id": "g20",
+   "name": "Wells Fargo",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "hyd",
+    "blr",
+    "chn"
+   ],
+   "band": "10k+ (30,000+; Chennai closing by 2027)",
+   "status": "Operating",
+   "url": "https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/",
+   "srcLabel": "Reuters factbox via Stockopedia",
+   "date": "2026-05"
+  },
+  {
+   "id": "g21",
+   "name": "Morgan Stanley",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "mum",
+    "blr"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://www.morganstanley.com/articles/morgan-stanley-india-grow-your-career",
+   "srcLabel": "Morgan Stanley careers page",
+   "date": ""
+  },
+  {
+   "id": "g22",
+   "name": "Citi",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "pun",
+    "chn",
+    "blr",
+    "mum"
+   ],
+   "band": "10k+ (33,000+)",
+   "status": "Operating",
+   "url": "https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/",
+   "srcLabel": "Reuters factbox via Stockopedia",
+   "date": "2026-05"
+  },
+  {
+   "id": "g23",
+   "name": "American Express",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "ggn",
+    "mum",
+    "blr",
+    "chn"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/",
+   "srcLabel": "Reuters factbox via Stockopedia",
+   "date": "2026-05"
+  },
+  {
+   "id": "g24",
+   "name": "Fidelity Investments",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "blr",
+    "chn"
+   ],
+   "band": "5k–10k (7,000+)",
+   "status": "Operating",
+   "url": "https://yourstory.com/enterprise-story/2023/07/fidelity-india-technology-leadership-financial-services",
+   "srcLabel": "YourStory",
+   "date": "2023-07"
+  },
+  {
+   "id": "g25",
+   "name": "BNY",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "pun",
+    "chn"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://www.bny.com/corporate/in/en/operations.html",
+   "srcLabel": "BNY India operations page",
+   "date": ""
+  },
+  {
+   "id": "g26",
+   "name": "Synchrony",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "hyd"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://www.cxodigitalpulse.com/synchrony-opens-largest-global-experience-centre-in-hyderabad/",
+   "srcLabel": "CXO Digital Pulse",
+   "date": ""
+  },
+  {
+   "id": "g27",
+   "name": "Mastercard",
+   "hq": "USA",
+   "sector": "BFSI",
+   "cities": [
+    "pun",
+    "ggn"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://www.mastercard.com/news/ap/en/newsroom/press-releases/en/2024/mastercard-opens-new-state-of-the-art-tech-hub-in-pune-india/",
+   "srcLabel": "Mastercard press release",
+   "date": "2024-10"
+  },
+  {
+   "id": "g28",
+   "name": "Deutsche Bank (DB India)",
+   "hq": "Germany",
+   "sector": "BFSI",
+   "cities": [
+    "pun",
+    "blr",
+    "mum"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://www.peoplematters.in/news/talent-acquisition/deutsche-bank-plans-to-hire-1000-techies-in-india-28721",
+   "srcLabel": "People Matters",
+   "date": ""
+  },
+  {
+   "id": "g29",
+   "name": "Barclays",
+   "hq": "UK",
+   "sector": "BFSI",
+   "cities": [
+    "chn",
+    "noi",
+    "mum"
+   ],
+   "band": "5k–10k (~9,000)",
+   "status": "Operating",
+   "url": "https://www.stockopedia.com/share-prices/wells-fargo-co-NYQ:WFC/news/factbox-india-apos-s-largest-banking-and-financial-services-tech-hubs-019e6dd4-a164-7529-93c6-db67a7215ace/",
+   "srcLabel": "Reuters factbox via Stockopedia",
+   "date": "2026-05"
+  },
+  {
+   "id": "g30",
+   "name": "HSBC",
+   "hq": "UK",
+   "sector": "BFSI",
+   "cities": [
+    "hyd",
+    "pun",
+    "blr"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://www.hsbc.com/careers/where-we-hire/india/technology",
+   "srcLabel": "HSBC Technology India page",
+   "date": ""
+  },
+  {
+   "id": "g31",
+   "name": "Standard Chartered GBS",
+   "hq": "UK",
+   "sector": "BFSI",
+   "cities": [
+    "chn",
+    "blr"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://www.sc.com/en/global-careers/experienced-hire/spotlight/careers-in-gbs-india/",
+   "srcLabel": "Standard Chartered GBS India page",
+   "date": ""
+  },
+  {
+   "id": "g32",
+   "name": "NatWest Group",
+   "hq": "UK",
+   "sector": "BFSI",
+   "cities": [
+    "ggn",
+    "chn",
+    "blr"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://www.natwestgroup.com/who-we-are/at-a-glance/worldwide-locations/natwest-group-india.html",
+   "srcLabel": "NatWest Group India page",
+   "date": ""
+  },
+  {
+   "id": "g33",
+   "name": "UBS",
+   "hq": "Switzerland",
+   "sector": "BFSI",
+   "cities": [
+    "pun",
+    "mum",
+    "hyd"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://www.finews.asia/finance/44672-ubs-global-capability-center-technology-hyderabad-india",
+   "srcLabel": "finews.asia",
+   "date": ""
+  },
+  {
+   "id": "g34",
+   "name": "Microsoft India Development Center",
+   "hq": "USA",
+   "sector": "Technology",
+   "cities": [
+    "hyd",
+    "blr",
+    "noi"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://microsoft.com/en-in/msidc",
+   "srcLabel": "Microsoft IDC page",
+   "date": ""
+  },
+  {
+   "id": "g35",
+   "name": "Google",
+   "hq": "USA",
+   "sector": "Technology",
+   "cities": [
+    "blr",
+    "hyd"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://www.business-standard.com/technology/tech-news/google-opens-ananta-campus-in-bengaluru-one-of-its-largest-globally-125021900899_1.html",
+   "srcLabel": "Business Standard (Ananta campus)",
+   "date": "2025-02"
+  },
+  {
+   "id": "g36",
+   "name": "Cisco",
+   "hq": "USA",
+   "sector": "Technology",
+   "cities": [
+    "blr"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2007/m10/cisco-outlines-globalisation-vision-at-unveiling-of-campus-in-bangalore.html",
+   "srcLabel": "Cisco newsroom (Bengaluru campus)",
+   "date": "2007-10"
+  },
+  {
+   "id": "g37",
+   "name": "SAP Labs India",
+   "hq": "Germany",
+   "sector": "Technology",
+   "cities": [
+    "blr",
+    "ggn",
+    "pun"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://www.sap.com/india/about/labs-india.html",
+   "srcLabel": "SAP Labs India page",
+   "date": ""
+  },
+  {
+   "id": "g38",
+   "name": "Adobe",
+   "hq": "USA",
+   "sector": "Technology",
+   "cities": [
+    "noi",
+    "blr"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://www.thenewsminute.com/atom/adobe-expands-india-footprint-opens-new-office-host-2000-employees-176313",
+   "srcLabel": "The News Minute",
+   "date": ""
+  },
+  {
+   "id": "g39",
+   "name": "Qualcomm",
+   "hq": "USA",
+   "sector": "Semiconductors",
+   "cities": [
+    "hyd",
+    "blr",
+    "chn"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://www.businesstoday.in/amp/technology/news/story/qualcomms-tapes-out-2nm-chip-design-with-their-indian-design-labs-515107-2026-02-07",
+   "srcLabel": "Business Today",
+   "date": "2026-02"
+  },
+  {
+   "id": "g40",
+   "name": "Intel",
+   "hq": "USA",
+   "sector": "Semiconductors",
+   "cities": [
+    "blr",
+    "hyd"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://cxotoday.com/media-coverage/intel-india-opens-a-new-state-of-the-art-design-engineering-center-in-bengaluru/",
+   "srcLabel": "CXOToday",
+   "date": ""
+  },
+  {
+   "id": "g41",
+   "name": "Novartis",
+   "hq": "Switzerland",
+   "sector": "Life sciences & healthcare",
+   "cities": [
+    "hyd"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://en.channeliam.com/2025/12/19/novartis-expands-india-biomedical-research-drug-development/",
+   "srcLabel": "Channel IAM",
+   "date": "2025-12"
+  },
+  {
+   "id": "g42",
+   "name": "AstraZeneca",
+   "hq": "UK",
+   "sector": "Life sciences & healthcare",
+   "cities": [
+    "chn",
+    "blr"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://www.theweek.in/wire-updates/business/2025/06/26/mcm3-biz-astrazeneca.html",
+   "srcLabel": "The Week (PTI)",
+   "date": "2025-06"
+  },
+  {
+   "id": "g43",
+   "name": "Optum (UnitedHealth Group)",
+   "hq": "USA",
+   "sector": "Life sciences & healthcare",
+   "cities": [
+    "hyd",
+    "ggn",
+    "noi",
+    "blr",
+    "chn"
+   ],
+   "band": "10k+ (33,000+)",
+   "status": "Operating",
+   "url": "https://www.optum.in/content/dam/optum3/optum/india/resources/Optum%20overview%20in%20India_final%20Aug%202023_digital.pdf",
+   "srcLabel": "Optum India overview",
+   "date": "2023-08"
+  },
+  {
+   "id": "g44",
+   "name": "Bosch Global Software Technologies",
+   "hq": "Germany",
+   "sector": "Auto & engineering",
+   "cities": [
+    "blr",
+    "cbe",
+    "hyd",
+    "pun"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://bosch-softwaretechnologies.com/en/locations",
+   "srcLabel": "Bosch BGSW locations page",
+   "date": ""
+  },
+  {
+   "id": "g45",
+   "name": "Mercedes-Benz R&D India",
+   "hq": "Germany",
+   "sector": "Auto & engineering",
+   "cities": [
+    "blr"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://group.mercedes-benz.com/careers/about-us/locations/location-detail-page-18185.html",
+   "srcLabel": "Mercedes-Benz location page",
+   "date": ""
+  },
+  {
+   "id": "g46",
+   "name": "Ford Business Solutions",
+   "hq": "USA",
+   "sector": "Auto & engineering",
+   "cities": [
+    "chn"
+   ],
+   "band": "10k+",
+   "status": "Operating",
+   "url": "https://www.business-standard.com/companies/news/post-india-exit-chennai-brains-key-to-ford-s-top-selling-models-globally-124082201075_1.html",
+   "srcLabel": "Business Standard",
+   "date": "2024-08"
+  },
+  {
+   "id": "g47",
+   "name": "Renault Nissan Technology & Business Centre",
+   "hq": "France / Japan",
+   "sector": "Auto & engineering",
+   "cities": [
+    "chn"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://autocarpro.in/news/renault-nissan-technology-business-centre-india-inaugurates-new-workspace-in-tamil-nadu-122744",
+   "srcLabel": "Autocar Professional",
+   "date": ""
+  },
+  {
+   "id": "g48",
+   "name": "Caterpillar",
+   "hq": "USA",
+   "sector": "Aerospace & industrial",
+   "cities": [
+    "chn",
+    "blr"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://www.caterpillar.com/en/company/global-footprint/india/locations.html",
+   "srcLabel": "Caterpillar India locations page",
+   "date": ""
+  },
+  {
+   "id": "g49",
+   "name": "Boeing India Engineering & Technology Center",
+   "hq": "USA",
+   "sector": "Aerospace & industrial",
+   "cities": [
+    "blr",
+    "chn"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://www.businesstoday.in/amp/industry/story/boeing-lays-off-up-to-180-employees-at-bengaluru-tech-centre-amid-global-job-cuts-469021-2025-03-23",
+   "srcLabel": "Business Today",
+   "date": "2025-03"
+  },
+  {
+   "id": "g50",
+   "name": "Airbus India",
+   "hq": "France",
+   "sector": "Aerospace & industrial",
+   "cities": [
+    "blr"
+   ],
+   "band": "1k–5k",
+   "status": "Operating",
+   "url": "https://www.airbus.com/en/newsroom/press-releases/2026-03-airbus-scales-up-make-in-india-with-new-5000-seater-technology-centre-in-bengaluru",
+   "srcLabel": "Airbus press release (5,000-seat centre)",
+   "date": "2026-03"
+  },
+  {
+   "id": "g51",
+   "name": "Shell",
+   "hq": "UK",
+   "sector": "Energy",
+   "cities": [
+    "blr",
+    "chn"
+   ],
+   "band": "5k–10k",
+   "status": "Operating",
+   "url": "https://businessworld.in/article/shell-to-hire-1000-professionals-this-year-at-bengaluru-centre-97451",
+   "srcLabel": "BusinessWorld",
+   "date": ""
+  },
+  {
+   "id": "g52",
+   "name": "Nokia",
+   "hq": "Finland",
+   "sector": "Telecom",
+   "cities": [
+    "blr",
+    "chn"
+   ],
+   "band": "10k+ (17,000+ in India)",
+   "status": "Operating",
+   "url": "https://www.nokia.com/sites/default/files/2024-04/nokia-making-in-india-for-india-and-the-world_18_april_2024.pdf",
+   "srcLabel": "Nokia India fact sheet",
+   "date": "2024-04"
+  }
+ ],
+ "PROVIDERS": [
+  {
+   "id": "p01",
+   "name": "ANSR",
+   "cat": "Build-operate-transfer & setup",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn"
+   ],
+   "services": "End-to-end GCC setup and operation",
+   "site": "https://ansr.com"
+  },
+  {
+   "id": "p02",
+   "name": "Genpact",
+   "cat": "Build-operate-transfer & setup",
+   "cities": [
+    "blr",
+    "hyd",
+    "ggn",
+    "noi",
+    "kol",
+    "jai"
+   ],
+   "services": "Operations partner and GCC build services",
+   "site": "https://www.genpact.com"
+  },
+  {
+   "id": "p03",
+   "name": "Deloitte India",
+   "cat": "Setup advisory, tax & accounting",
+   "cities": [
+    "blr",
+    "hyd",
+    "mum",
+    "ggn",
+    "pun",
+    "chn"
+   ],
+   "services": "Entry strategy, entity setup, tax",
+   "site": "https://www.deloitte.com/in"
+  },
+  {
+   "id": "p04",
+   "name": "EY India",
+   "cat": "Setup advisory, tax & accounting",
+   "cities": [
+    "blr",
+    "hyd",
+    "mum",
+    "ggn",
+    "pun",
+    "chn",
+    "koc",
+    "kol"
+   ],
+   "services": "GCC strategy, tax, transfer pricing",
+   "site": "https://www.ey.com/en_in"
+  },
+  {
+   "id": "p05",
+   "name": "KPMG India",
+   "cat": "Setup advisory, tax & accounting",
+   "cities": [
+    "blr",
+    "hyd",
+    "mum",
+    "ggn",
+    "pun",
+    "chn"
+   ],
+   "services": "Entity setup, tax, compliance",
+   "site": "https://kpmg.com/in"
+  },
+  {
+   "id": "p06",
+   "name": "PwC India",
+   "cat": "Setup advisory, tax & accounting",
+   "cities": [
+    "blr",
+    "hyd",
+    "mum",
+    "ggn",
+    "kol",
+    "chn"
+   ],
+   "services": "GCC design, tax, transformation",
+   "site": "https://www.pwc.in"
+  },
+  {
+   "id": "p07",
+   "name": "Grant Thornton Bharat",
+   "cat": "Setup advisory, tax & accounting",
+   "cities": [
+    "blr",
+    "mum",
+    "ggn",
+    "pun",
+    "chn",
+    "kol"
+   ],
+   "services": "Incorporation, accounting, compliance",
+   "site": "https://www.grantthornton.in"
+  },
+  {
+   "id": "p08",
+   "name": "Zinnov",
+   "cat": "Advisory & market intelligence",
+   "cities": [
+    "blr",
+    "ggn"
+   ],
+   "services": "Location strategy, benchmarks; also a data publisher",
+   "site": "https://zinnov.com"
+  },
+  {
+   "id": "p09",
+   "name": "Cyril Amarchand Mangaldas",
+   "cat": "Legal",
+   "cities": [
+    "mum",
+    "blr",
+    "ggn",
+    "chn",
+    "hyd"
+   ],
+   "services": "Corporate, employment and real estate law",
+   "site": "https://www.cyrilshroff.com"
+  },
+  {
+   "id": "p10",
+   "name": "AZB & Partners",
+   "cat": "Legal",
+   "cities": [
+    "mum",
+    "blr",
+    "ggn",
+    "chn",
+    "pun"
+   ],
+   "services": "Corporate structuring, employment, tax",
+   "site": "https://www.azbpartners.com"
+  },
+  {
+   "id": "p11",
+   "name": "Khaitan & Co",
+   "cat": "Legal",
+   "cities": [
+    "mum",
+    "blr",
+    "ggn",
+    "kol",
+    "chn"
+   ],
+   "services": "Entity setup, employment, GCC policy advice",
+   "site": "https://www.khaitanco.com"
+  },
+  {
+   "id": "p12",
+   "name": "Trilegal",
+   "cat": "Legal",
+   "cities": [
+    "mum",
+    "blr",
+    "ggn"
+   ],
+   "services": "Corporate, employment, data protection",
+   "site": "https://trilegal.com"
+  },
+  {
+   "id": "p13",
+   "name": "CBRE India",
+   "cat": "Real estate & workplace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "kol",
+    "amd"
+   ],
+   "services": "Site selection, leasing, fit-out management",
+   "site": "https://www.cbre.co.in"
+  },
+  {
+   "id": "p14",
+   "name": "JLL India",
+   "cat": "Real estate & workplace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "kol",
+    "amd",
+    "koc"
+   ],
+   "services": "Location strategy, leasing, design and build",
+   "site": "https://www.jll.com/en-in"
+  },
+  {
+   "id": "p15",
+   "name": "Cushman & Wakefield India",
+   "cat": "Real estate & workplace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "kol",
+    "amd"
+   ],
+   "services": "Leasing, workplace strategy",
+   "site": "https://www.cushmanwakefield.com/en/india"
+  },
+  {
+   "id": "p16",
+   "name": "Colliers India",
+   "cat": "Real estate & workplace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "mum",
+    "kol"
+   ],
+   "services": "Leasing and occupier advisory",
+   "site": "https://www.colliers.com/en-in"
+  },
+  {
+   "id": "p17",
+   "name": "Vestian",
+   "cat": "Real estate & workplace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "mum"
+   ],
+   "services": "Occupier-only advisory, GCC research",
+   "site": "https://www.vestian.com"
+  },
+  {
+   "id": "p18",
+   "name": "WeWork India",
+   "cat": "Flexible workspace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum"
+   ],
+   "services": "Managed offices for early teams",
+   "site": "https://wework.co.in"
+  },
+  {
+   "id": "p19",
+   "name": "Smartworks",
+   "cat": "Flexible workspace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "kol"
+   ],
+   "services": "Managed campuses for large teams",
+   "site": "https://www.sworks.co.in"
+  },
+  {
+   "id": "p20",
+   "name": "Awfis",
+   "cat": "Flexible workspace",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "amd",
+    "jai",
+    "vsk",
+    "idr",
+    "koc",
+    "cbe",
+    "kol"
+   ],
+   "services": "Flexible desks and managed offices",
+   "site": "https://www.awfis.com"
+  },
+  {
+   "id": "p21",
+   "name": "Deel",
+   "cat": "Employer of record & payroll",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "amd",
+    "jai",
+    "vsk",
+    "idr",
+    "koc",
+    "cbe",
+    "kol"
+   ],
+   "services": "Hire before your entity exists",
+   "site": "https://www.deel.com"
+  },
+  {
+   "id": "p22",
+   "name": "Multiplier",
+   "cat": "Employer of record & payroll",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "amd",
+    "jai",
+    "vsk",
+    "idr",
+    "koc",
+    "cbe",
+    "kol"
+   ],
+   "services": "EOR and payroll",
+   "site": "https://www.usemultiplier.com"
+  },
+  {
+   "id": "p23",
+   "name": "Remote",
+   "cat": "Employer of record & payroll",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "amd",
+    "jai",
+    "vsk",
+    "idr",
+    "koc",
+    "cbe",
+    "kol"
+   ],
+   "services": "EOR and contractor management",
+   "site": "https://remote.com"
+  },
+  {
+   "id": "p24",
+   "name": "TeamLease Services",
+   "cat": "Hiring & staffing",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "noi",
+    "mum",
+    "amd",
+    "jai",
+    "vsk",
+    "idr",
+    "koc",
+    "cbe",
+    "kol"
+   ],
+   "services": "Staffing, payroll, compliance",
+   "site": "https://www.teamlease.com"
+  },
+  {
+   "id": "p25",
+   "name": "Xpheno",
+   "cat": "Hiring & staffing",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "mum"
+   ],
+   "services": "Specialist tech hiring",
+   "site": "https://www.xpheno.com"
+  },
+  {
+   "id": "p26",
+   "name": "Randstad India",
+   "cat": "Hiring & staffing",
+   "cities": [
+    "blr",
+    "hyd",
+    "pun",
+    "chn",
+    "ggn",
+    "mum",
+    "kol"
+   ],
+   "services": "Permanent and contract hiring",
+   "site": "https://www.randstad.in"
+  }
+ ],
+ "SEED_RECEIPTS": [
+  {
+   "id": "r1",
+   "prov": "ANSR",
+   "client": "Arch Capital Group",
+   "what": "Partnered with Arch Capital on its GCCs in Pune and Thiruvananthapuram (350+ employees planned; Hyderabad to follow). The source does not say what ANSR's role covered.",
+   "city": "pun",
+   "period": "Announced Aug 2025",
+   "tier": "Reported",
+   "url": "https://cxotoday.com/media-coverage/arch-capital-group-opens-global-capabilities-centers-in-india/",
+   "srcLabel": "CXOToday, 1 Aug 2025"
+  },
+  {
+   "id": "r5",
+   "prov": "Khaitan & Co",
+   "client": "Arch Capital Group",
+   "what": "Legal advisor to Arch in establishing its GCCs in Pune and Thiruvananthapuram.",
+   "city": "pun",
+   "period": "Announced Aug 2025",
+   "tier": "Reported",
+   "url": "https://cxotoday.com/media-coverage/arch-capital-group-opens-global-capabilities-centers-in-india/",
+   "srcLabel": "CXOToday, 1 Aug 2025"
+  },
+  {
+   "id": "r2",
+   "prov": "Genpact",
+   "client": "Nestlé Business Solutions",
+   "what": "Partner on Nestlé's new GCC in Hyderabad. The source does not say what Genpact's role covers.",
+   "city": "hyd",
+   "period": "2026",
+   "tier": "Reported",
+   "url": "https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/",
+   "srcLabel": "Sights in Plus, Jul 2026"
+  },
+  {
+   "id": "r3",
+   "prov": "Zinnov",
+   "client": "Not named",
+   "what": "Says it has set up or transformed 220+ GCCs. No clients or dates are named, so it cannot move past Claimed.",
+   "city": "",
+   "period": "Ongoing",
+   "tier": "Claimed",
+   "url": "https://zinnov.com/offerings/gcc-setup-and-transformation/",
+   "srcLabel": "Zinnov website"
+  },
+  {
+   "id": "r4",
+   "prov": "ANSR",
+   "client": "Not named",
+   "what": "Says it is a Leader in Everest Group's 2025 GCC setup assessment. That is an analyst rating, not a delivery.",
+   "city": "",
+   "period": "2025",
+   "tier": "Claimed",
+   "url": "https://ansr.com/ansr-vs-others/",
+   "srcLabel": "ANSR website"
+  }
+ ],
+ "LADDER": [
+  [
+   "ann",
+   "Announced or rumoured"
+  ],
+  [
+   "ent",
+   "Entity incorporated (MCA)"
+  ],
+  [
+   "space",
+   "Space approved (SEZ / STPI)"
+  ],
+  [
+   "lease",
+   "Lease signed"
+  ],
+  [
+   "hire",
+   "Hiring"
+  ],
+  [
+   "op",
+   "Operational"
+  ]
+ ],
+ "SIGNALS": [
+  {
+   "name": "Illustrative: US specialty insurer",
+   "sample": true,
+   "sector": "BFSI",
+   "city": "pun",
+   "steps": {
+    "ann": null,
+    "ent": {
+     "d": "Month 0",
+     "t": "Indian private limited subsidiary incorporated"
+    },
+    "space": {
+     "d": "Month 3",
+     "t": "Unit approved in SEZ approval committee minutes"
+    },
+    "lease": null,
+    "hire": null,
+    "op": null
+   }
+  },
+  {
+   "name": "Illustrative: European medtech firm",
+   "sample": true,
+   "sector": "Life sciences & healthcare",
+   "city": "blr",
+   "steps": {
+    "ann": null,
+    "ent": {
+     "d": "Month 0",
+     "t": "Subsidiary incorporated"
+    },
+    "space": null,
+    "lease": {
+     "d": "Month 4",
+     "t": "Lease named in a broker deal roundup"
+    },
+    "hire": {
+     "d": "Month 5",
+     "t": "Job posts for India site lead and engineers"
+    },
+    "op": null
+   }
+  },
+  {
+   "name": "Southwest Airlines",
+   "sector": "Travel & transport",
+   "city": "hyd",
+   "steps": {
+    "ann": {
+     "d": "2026",
+     "t": "Global Innovation Centre, ~1,000 roles planned",
+     "url": "https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/"
+    },
+    "ent": "unk",
+    "space": "unk",
+    "lease": "unk",
+    "hire": "unk",
+    "op": null
+   }
+  },
+  {
+   "name": "Zimmer Biomet",
+   "sector": "Life sciences & healthcare",
+   "city": "blr",
+   "steps": {
+    "ann": {
+     "d": "2026",
+     "t": "~500 hires over three years",
+     "url": "https://www.sightsinplus.com/editorial/major-gcc-announcements-in-2026-set-to-create-thousands-of-jobs-in-india/"
+    },
+    "ent": "unk",
+    "space": "unk",
+    "lease": "unk",
+    "hire": "unk",
+    "op": null
+   }
+  },
+  {
+   "name": "Nationwide Mutual Insurance",
+   "sector": "BFSI",
+   "city": "hyd",
+   "steps": {
+    "ann": {
+     "d": "Jul 2025",
+     "t": "500–1,000 jobs expected",
+     "url": "https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756"
+    },
+    "ent": "unk",
+    "space": "unk",
+    "lease": {
+     "d": "Jul 2025",
+     "t": "Raheja Mindspace reported",
+     "url": "https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756"
+    },
+    "hire": "unk",
+    "op": {
+     "d": "8 Jul 2026",
+     "t": "Nationwide Global Services Center opened in Hyderabad",
+     "url": "https://telanganatoday.com/us-insurance-giant-nationwide-opens-global-services-centre-in-hyderabad"
+    }
+   }
+  },
+  {
+   "name": "Costco",
+   "sector": "Retail & CPG",
+   "city": "hyd",
+   "steps": {
+    "ann": {
+     "d": "Jul 2025",
+     "t": "~1,000 initial hiring target; Knowledge City",
+     "url": "https://www.etvbharat.com/en/!state/hyderabad-emerges-as-a-hub-for-global-capability-centers-closes-in-on-bengaluru-enn25072204756"
+    },
+    "ent": "unk",
+    "space": "unk",
+    "lease": "unk",
+    "hire": "unk",
+    "op": "unk"
+   }
+  },
+  {
+   "name": "JLL Business Services",
+   "sector": "Professional services",
+   "city": "hyd",
+   "steps": {
+    "ann": {
+     "d": "Aug 2026",
+     "t": "Second India hub after Gurugram",
+     "url": "https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"
+    },
+    "ent": "unk",
+    "space": "unk",
+    "lease": {
+     "d": "Aug 2026",
+     "t": "120,000 sq ft",
+     "url": "https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"
+    },
+    "hire": {
+     "d": "Aug 2026",
+     "t": "To ~1,600 in two years",
+     "url": "https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"
+    },
+    "op": {
+     "d": "Aug 2026",
+     "t": "Opened",
+     "url": "https://www.cxodigitalpulse.com/jll-opens-global-capability-centre-in-hyderabad-plans-to-scale-workforce-to-1600/"
+    }
+   }
+  },
+  {
+   "name": "Acumatica",
+   "sector": "Technology",
+   "city": "hyd",
+   "steps": {
+    "ann": {
+     "d": "11 Aug 2026",
+     "t": "Engineering centre, Nanakramguda",
+     "url": "https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad"
+    },
+    "ent": "unk",
+    "space": "unk",
+    "lease": "unk",
+    "hire": {
+     "d": "Aug 2026",
+     "t": "30+ staff, more to join",
+     "url": "https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad"
+    },
+    "op": {
+     "d": "11 Aug 2026",
+     "t": "Opened",
+     "url": "https://telanganatoday.com/acumatica-opens-global-capability-center-in-hyderabad"
+    }
+   }
+  }
+ ],
+ "FUNCS": [
+  {
+   "id": "eng",
+   "label": "Software engineering",
+   "base": 20,
+   "def": 50
+  },
+  {
+   "id": "data",
+   "label": "Data & AI",
+   "base": 24,
+   "def": 20
+  },
+  {
+   "id": "ops",
+   "label": "Finance & business ops",
+   "base": 9,
+   "def": 20
+  },
+  {
+   "id": "svc",
+   "label": "Customer & shared services",
+   "base": 5.5,
+   "def": 10
+  }
+ ],
+ "SECTOR_MIX": {
+  "BFSI": [
+   50,
+   20,
+   20,
+   10
+  ],
+  "Technology": [
+   65,
+   20,
+   10,
+   5
+  ],
+  "Retail & CPG": [
+   45,
+   25,
+   20,
+   10
+  ],
+  "Life sciences & healthcare": [
+   35,
+   30,
+   20,
+   15
+  ],
+  "Auto & engineering": [
+   70,
+   15,
+   10,
+   5
+  ],
+  "Semiconductors": [
+   80,
+   15,
+   5,
+   0
+  ],
+  "Aerospace & industrial": [
+   70,
+   15,
+   10,
+   5
+  ],
+  "Energy": [
+   45,
+   25,
+   20,
+   10
+  ],
+  "Telecom": [
+   65,
+   15,
+   10,
+   10
+  ],
+  "Travel & transport": [
+   35,
+   20,
+   20,
+   25
+  ],
+  "Professional services": [
+   30,
+   20,
+   35,
+   15
+  ]
+ },
+ "WEIGHTS": [
+  {
+   "id": "talent",
+   "label": "Talent depth",
+   "def": 5
+  },
+  {
+   "id": "eco",
+   "label": "GCC ecosystem size",
+   "def": 4
+  },
+  {
+   "id": "cost",
+   "label": "Low cost",
+   "def": 3
+  },
+  {
+   "id": "pol",
+   "label": "Dedicated state policy",
+   "def": 2
+  },
+  {
+   "id": "conn",
+   "label": "International flights",
+   "def": 2
+  },
+  {
+   "id": "peers",
+   "label": "Peers in our sample",
+   "def": 1
+  }
+ ],
+ "MODELS": [
+  {
+   "id": "eor",
+   "label": "Employer of record",
+   "sub": "Hire in weeks",
+   "note": "Fastest start, no entity needed. A provider employs your staff for a monthly fee per person, so it gets expensive at scale. Usually a bridge for the first 20 to 50 people. (Our judgement)"
+  },
+  {
+   "id": "bot",
+   "label": "Build-operate-transfer",
+   "sub": "Partner builds",
+   "note": "A partner sets up and runs the centre, then transfers it to you. Check the partner's delivery receipts first. (Our judgement)"
+  },
+  {
+   "id": "own",
+   "label": "Own entity",
+   "sub": "Full control",
+   "note": "You incorporate and hire directly. Most control and lowest long-run cost; slowest start. (Our judgement)"
+  }
+ ],
+ "MODEL": {
+  "loaded": 1.25,
+  "lead": 0.05,
+  "leadLpa": 60,
+  "sqftPerSeat": 100,
+  "cam": 12,
+  "otherPerHead": 150000,
+  "fitout": 4000,
+  "fx": 88
+ },
+ "OPMODEL": {
+  "eor": {
+   "fee": 40000,
+   "flex": 1.5,
+   "setup": 0,
+   "start": "4–8 weeks"
+  },
+  "bot": {
+   "mgmt": 0.12,
+   "setup": 0,
+   "start": "3–4 months"
+  },
+  "own": {
+   "setup": 6000000,
+   "start": "6–9 months"
+  }
+ },
+ "LIKE": {
+  "intercept": -2,
+  "w": {
+   "ann": 2,
+   "ent": 1,
+   "space": 1.5,
+   "lease": 1.5,
+   "hire": 1
+  }
+ }
+}
